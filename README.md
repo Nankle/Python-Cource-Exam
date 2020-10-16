@@ -1,4 +1,5 @@
 # Python-Cource-Exam
+<<<<<<< Updated upstream
 ## Exam of python space analysis-2020.10.15
 
  == Let's do it
@@ -49,3 +50,21 @@ config: configration of project<br>
 ## Reference
 Scikit-Learn : https://scikit-learn.org/stable/index.html<br>
 [How to edit Readme.md](https://blog.csdn.net/Kaitiren/article/details/38513715)
+=======
+ Exam of python space analysis-2020.10.15
+ =====
+
+ Explanation of project folders: 
+ ----
+ utils : Function Modules 
+ data  : Work Data 
+ config: configration of project 
+
+ Task assignment：
+ 张天巍 ：
+ 陈德跃 ：
+ 翟富祥 ：
+ 邹玮杰 ：
+ 陶诗语 ：
+ 罗佩弦 ：
+>>>>>>> Stashed changes

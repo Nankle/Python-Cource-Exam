@@ -1,20 +1,18 @@
 # Python-Cource-Exam
- Exam of python space analysis-2020.10.15
- --
- 
+## Exam of python space analysis-2020.10.15
+
  ==
  
- Explanation of project folders: 
- --
+## Explanation of project folders: 
  
- utils : Function Modules 
- data  : Work Data 
- config: configration of project 
+utils : Function Modules<br>
+data  : Work Data<br>
+config: configration of project<br> 
 
- Task assignment：
- 张天巍 ：
- 陈德跃 ：
- 翟富祥 ：
- 邹玮杰 ：
- 陶诗语 ：
- 罗佩弦 ：
+Task assignment：<br>
+ 张天巍 :<br>
+ 陈德跃 :<br>
+ 翟富祥 :<br>
+ 邹玮杰 :<br>
+ 陶诗语 :<br>
+ 罗佩弦 :<br>

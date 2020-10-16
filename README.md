@@ -3,6 +3,8 @@
 
  == Let's do it
  
+ ![Data Vision](https://github.com/Nankle/Python-Cource-Exam/blob/main/%E6%95%B0%E6%8D%AE%E5%BF%AB%E8%A7%86%E5%9B%BE.png)
+ 
 ## Explanation of project folders: 
  
 utils : Function Modules<br>
@@ -41,6 +43,8 @@ config: configration of project<br>
  邹玮杰 :<br>
  陶诗语 :<br>
  罗佩弦 :<br>
+ 
+ **请大家在utils中增添属于自己的.py文件，用于不同分支任务的完成和模块调用**
  
 ## Reference
 Scikit-Learn : https://scikit-learn.org/stable/index.html<br>

@@ -6,6 +6,8 @@
 import os
 import numpy as np
 from  osgeo import gdal
+import matplotlib.pyplot as plt
+
 
 def func_1():
     pass

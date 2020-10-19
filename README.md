@@ -47,11 +47,13 @@ config: configration of project<br>
   1.获取邻接道路交叉口点<br>
   2.数据解析表格<br>
 
-  | File Name | 文件描述 | 主要字段与含义
+  | File Name | 文件描述 | 主要字段与含义 |
   | :----:| :----: | :----: |
-  |20201006_carvideo_orig.shp | |
-  |road_zhongguancun.shp | |
-  |tracking_points_heading.shp| |
+  |20201006_carvideo_orig.shp | 行车记录仪采样数据，包含采集到的路边标线类型|
+  |road_zhongguancun.shp | 道路线目标矢量文件 |
+  |tracking_points_heading.shp|  |
+  |traffic_intersection_zhongguancun.shp|道路交叉口点数据| |
+  |zhongguancun.jpg| 实验区卫星数据 |
 
   3.矢量数据可视化  `Done` **utils.SHAPE class** <br> 
 

@@ -39,6 +39,7 @@ config: configration of project<br>
 ## Task assignment：<br>
  **张天巍** :<br>
   1.获取邻接道路交叉口点<br>
+  2.数据解析表格<br>
  **陈德跃** :<br>
 
  **翟富祥** :<br>
@@ -53,3 +54,5 @@ config: configration of project<br>
 ## Reference
 Scikit-Learn : https://scikit-learn.org/stable/index.html<br>
 [How to edit Readme.md](https://blog.csdn.net/Kaitiren/article/details/38513715)
+[How to pull requst to updata ur own code](https://www.jianshu.com/p/ebad936fac4d)
+[Frequently-used command in github](https://blog.csdn.net/wjh2622075127/article/details/87900006?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-87900006.nonecase&utm_term=github%20pull%20%E5%91%BD%E4%BB%A4&spm=1000.2123.3001.4430)

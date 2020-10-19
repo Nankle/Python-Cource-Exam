@@ -38,7 +38,7 @@ config: configration of project<br>
 
 ## Task assignment：<br>
  张天巍 :<br>
-  1.获取邻接道路交叉口点
+  1.获取邻接道路交叉口点<br>
  陈德跃 :<br>
  翟富祥 :<br>
  邹玮杰 :<br>

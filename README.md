@@ -50,7 +50,8 @@ config: configration of project<br>
   | File Name | 文件描述 | 主要字段与含义
   | :----:| :----: | :----: |
   |20201006_carvideo_orig.shp | |
-  |road_zhongguancun.shp ｜ |
+  |road_zhongguancun.shp | |
+  |tracking_points_heading.shp| |
 
   3.矢量数据可视化  `Done` **utils.SHAPE class** <br> 
 

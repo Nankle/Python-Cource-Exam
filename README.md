@@ -40,7 +40,7 @@ config: configration of project<br>
  **张天巍** :<br>
   1.获取邻接道路交叉口点<br>
  **陈德跃** :<br>
-  2.
+
  **翟富祥** :<br>
   1.生成Vorionio三角形<br>
  **邹玮杰** :<br>

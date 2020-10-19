@@ -40,13 +40,17 @@ config: configration of project<br>
  **张天巍** :<br>
   1.获取邻接道路交叉口点<br>
   2.数据解析表格<br>
+  3.矢量数据可视化<br>   `Done` **utils.SHAPE class**
+  
  **陈德跃** :<br>
 
  **翟富祥** :<br>
   1.生成Vorionio三角形<br>
+
  **邹玮杰** :<br>
-  1.矢量数据可视化<br>
+
  **陶诗语** :<br>
+
  **罗佩弦** :<br>
  
  **请大家在utils中增添属于自己的.py文件，用于不同分支任务的完成和模块调用**

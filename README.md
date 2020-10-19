@@ -40,8 +40,8 @@ config: configration of project<br>
  **张天巍** :<br>
   1.获取邻接道路交叉口点<br>
   2.数据解析表格<br>
-  3.矢量数据可视化<br>   `Done` **utils.SHAPE class**
-  
+  3.矢量数据可视化  `Done` **utils.SHAPE class** <br> 
+
  **陈德跃** :<br>
 
  **翟富祥** :<br>

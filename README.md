@@ -46,11 +46,11 @@ config: configration of project<br>
  **张天巍** :<br>
   1.获取邻接道路交叉口点<br>
   2.数据解析表格<br>
-  
-  File Name | 文件描述 ｜ 主要字段与含义
-  ---- ｜ ---- ｜ ----
-  20201006_carvideo_orig.shp | 
-  road_zhongguancun.shp ｜ 
+
+  | File Name | 文件描述 | 主要字段与含义
+  | :----:| :----: | :----: |
+  |20201006_carvideo_orig.shp | |
+  |road_zhongguancun.shp ｜ |
 
   3.矢量数据可视化  `Done` **utils.SHAPE class** <br> 
 

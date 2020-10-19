@@ -66,3 +66,4 @@ Scikit-Learn : https://scikit-learn.org/stable/index.html<br>
 [How to edit Readme.md](https://blog.csdn.net/Kaitiren/article/details/38513715)<br>
 [How to pull requst to updata ur own code](https://www.jianshu.com/p/ebad936fac4d)<br>
 [Frequently-used command in github](https://blog.csdn.net/wjh2622075127/article/details/87900006?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-87900006.nonecase&utm_term=github%20pull%20%E5%91%BD%E4%BB%A4&spm=1000.2123.3001.4430)<br>
+[bad mf](https://blog.csdn.net/u_7890/article/details/81565679?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~first_rank_v2~rank_v25-1-81565679.nonecase&utm_term=github%E4%B8%AD%E7%9A%84readme%E6%B7%BB%E5%8A%A0%E8%A1%A8%E6%A0%BC&spm=1000.2123.3001.4430)<br>

@@ -15,7 +15,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.initCanvas()
         self.show()
         
-    def initUI(self):               
+    def initUI(self):
         #action
         openAction = QtWidgets.QAction(QtGui.QIcon('icon_open.png'), 'Open', self)
         openAction.setShortcut('Ctrl+O')
@@ -100,12 +100,12 @@ class MyWindow(QtWidgets.QMainWindow):
         self.on_draw()
     
     def on_opendialog(self):
-        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 'C:\\',"All files (*);;shape file (*.shp)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 'Users/',"All files (*);;shape file (*.shp)")
         print (fname)
         self.statusBar().showMessage('openned %s' % fname[0], 2000)
     
     def on_savedialog(self):
-        path = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 'C:\\', "PNG (*.png)|*.png")
+        path = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 'Users/', "PNG (*.png)|*.png") #过滤，使用管道符号
         print (path)
         if path:
             self.fig.savefig(path[0])
@@ -129,10 +129,9 @@ class MyWindow(QtWidgets.QMainWindow):
         y = np.sin(x)
         
         self.axes.clear()
-        self.axes.grid(self.grid_cb.isChecked())
+        self.axes.grid(self.grid_cb.isChecked())   #画网格，true就画
         self.axes.plot(x,y,'--o')
-        
-        self.canvas.draw()
+        self.canvas.draw()   #相当与内嵌调用fig.draw()
 
 #
 if __name__ == '__main__':

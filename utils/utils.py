@@ -106,9 +106,9 @@ if __name__ == "__main__":
     '''
 
     #显示字段列表, 几何对象及属性值
-    len(fieldlist)
-    len(geomlist)
+    print(len(fieldlist))
+    print(len(geomlist))
     print(spatialref.ExportToPrettyWkt())
-    print(geomtype)
+    # print(geomtype)
     print(fieldlist[0])
     print(geomlist[0], reclist[0][fieldlist[0][ 'name']])

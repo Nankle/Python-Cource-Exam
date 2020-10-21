@@ -17,12 +17,12 @@ class MyWindow(QtWidgets.QMainWindow):
         
     def initUI(self):
         #action
-        openAction = QtWidgets.QAction(QtGui.QIcon('icon_open.png'), 'Open', self)
+        openAction = QtWidgets.QAction(QtGui.QIcon('source/open.png'), 'Open', self)
         openAction.setShortcut('Ctrl+O')
         openAction.setStatusTip('Open Arcinfo Shape')
         openAction.triggered.connect(self.on_opendialog)
         
-        saveAction = QtWidgets.QAction(QtGui.QIcon('icon_save.png'), '&Save', self)
+        saveAction = QtWidgets.QAction(QtGui.QIcon('source/close.png'), '&Save', self)
         saveAction.setShortcut('Ctrl+S')
         saveAction.setStatusTip('Save Plot')
         saveAction.triggered.connect(self.on_savedialog)
@@ -133,7 +133,6 @@ class MyWindow(QtWidgets.QMainWindow):
         self.axes.plot(x,y,'--o')
         self.canvas.draw()   #相当与内嵌调用fig.draw()
 
-#
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     ex = MyWindow()

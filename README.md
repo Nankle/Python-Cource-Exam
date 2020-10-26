@@ -61,11 +61,6 @@ List: Grive_Principle(str):<br>
 6. 文档整理编写
 
 
-
-
-
-
-
 ## Task assignment：<br>
  **张天巍** :<br>
   1.获取邻接道路交叉口点<br>

@@ -39,7 +39,13 @@ config: configration of project<br>
     **相邻的多边形可能不存在连通性，即两个路口在生成的多边形结果中具有邻接关系，但实际其中间没有道路联通**`ZTW`<br>
 
 ## Methods<br>
- `wait to be confirmed`<br>
+ `Confirmed`<br>
+通过对采集点数据进行时序聚类，生成以连续采集时间段为划分的实验对象，创建路口类，通过一系列操作提取路口的行驶规则，具体步骤如下：<br>
+1. 生成以连续时间段为划分的点簇数据，由”20201006_carvideo_orig.shp“中获取，数据组织格式：<br>
+List:<br>
+[PointID, Lon, Lat, Type, GPSTime]<br>
+
+
 
 
 ## Task assignment：<br>
@@ -49,7 +55,7 @@ config: configration of project<br>
 
   | File Name | 文件描述 | 主要字段与含义 |
   | :----:| :----: | :----: |
-  |20201006_carvideo_orig.shp | 行车记录仪采样数据，包含采集到的路边标线类型，观测点|GPSTime 、Type（11种）
+  |20201006_carvideo_orig.shp | 行车记录仪采样数据，包含采集到的路边标线类型，观测点|GPSTime 、Type（11种)|
   |road_zhongguancun.shp | 道路线目标矢量文件 | None |
   |tracking_points_heading.shp| 行车轨迹点数据，包含时间，位置，和行驶朝向 | Time、经纬度、Heading|
   |traffic_intersection_zhongguancun.shp|道路交叉口点数据| 道路交叉口位置点数据 | |

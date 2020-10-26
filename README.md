@@ -33,10 +33,15 @@ config: configration of project<br>
 >  通过对采集点数据进行时序聚类，生成以连续采集时间段为划分的实验对象，创建路口类，通过一系列操作提取路口的行驶规则，具体步骤如下：<br>
 1. 生成以连续时间段为划分的点簇数据，由**20201006_carvideo_orig.shp**中获取，数据组织格式：<br>
 List->Point_Cluster: dtype : Str [PointID, CLuster_ID, Lon, Lat, Type, GPSTime]<br>
+
 2. 建立Road_Intersection类<br>
+
 3. 读取**traffic_intersection_zhongguancun.shp**文件，将每一个道路交叉口生成为一个Road_Intersection类的对象，
 构造参数为该交叉口的经纬度。将所有的交叉口对象保存到一个List:RI中。<br>
-4. 编写函数**Parse_Model(RI, Point_Cluster)**，目标：解析出属于 每一个道路交叉口对象 的 点簇(PC，Point_Cluster)有哪些,对每一个道路交叉口对象调用RI.Generate_Point_Cluster(Point_Cluster_Part)成员函数,从而完成归类，即RI.P_Cluster属性，为一个List<br>
+
+4. 编写函数**Parse_Model(RI, Point_Cluster)**，目标：解析出属于 每一个道路交叉口对象 的 点簇(PC，Point_Cluster)有哪些,对每一个道路交叉口对象调用<br>
+**RI.Generate_Point_Cluster(Point_Cluster_Part)**<br>
+成员函数,从而完成归类，即RI.P_Cluster属性，为一个List<br>
 算法实现思路：通过判断每个点簇中点的GPSTime先后顺序，判断处于时间序列最后的那个点距离哪个道路交叉口最近，并判断是否为驶入该交叉口，通过截断Point_Cluster链表来对每个道路交叉口赋值.<br>
 
 ---------------------------------------------<br>

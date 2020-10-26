@@ -40,10 +40,10 @@ config: configration of project<br>
 
 ## Methods<br>
  `Confirmed`<br>
-通过对采集点数据进行时序聚类，生成以连续采集时间段为划分的实验对象，创建路口类，通过一系列操作提取路口的行驶规则，具体步骤如下：<br>
+   通过对采集点数据进行时序聚类，生成以连续采集时间段为划分的实验对象，创建路口类，通过一系列操作提取路口的行驶规则，具体步骤如下：<br>
 1. 生成以连续时间段为划分的点簇数据，由”20201006_carvideo_orig.shp“中获取，数据组织格式：<br>
-List:<br>
-[PointID, Lon, Lat, Type, GPSTime]<br>
+List: dtype : Str [PointID, Lon, Lat, Type, GPSTime]<br>
+2. 
 
 
 

@@ -41,9 +41,25 @@ config: configration of project<br>
 ## Methods<br>
  `Confirmed`<br>
    通过对采集点数据进行时序聚类，生成以连续采集时间段为划分的实验对象，创建路口类，通过一系列操作提取路口的行驶规则，具体步骤如下：<br>
-1. 生成以连续时间段为划分的点簇数据，由”20201006_carvideo_orig.shp“中获取，数据组织格式：<br>
-List: dtype : Str [PointID, Lon, Lat, Type, GPSTime]<br>
-2. 
+1. 生成以连续时间段为划分的点簇数据，由**20201006_carvideo_orig.shp**中获取，数据组织格式：<br>
+List->Point_Cluster: dtype : Str [PointID, CLuster_ID, Lon, Lat, Type, GPSTime]<br>
+2. 建立Road_Intersection类<br>
+3. 读取**traffic_intersection_zhongguancun.shp**文件，将每一个道路交叉口生成为一个Road_Intersection类的对象，
+构造参数为该交叉口的经纬度。将所有的交叉口对象保存到一个List:RI中。<br>
+4. 编写函数**Parse_Model(RI, Point_Cluster)**，目标：解析出属于 每一个道路交叉口对象 的 点簇(PC，Point_Cluster)有哪些,对每一个道路交叉口对象调用RI.Generate_Point_Cluster(Point_Cluster_Part)成员函数,从而完成归类，即RI.P_Cluster属性，为一个List<br>
+算法实现思路：通过判断每个点簇中点的GPSTime先后顺序，判断处于时间序列最后的那个点距离哪个道路交叉口最近，并判断是否为驶入该交叉口，通过截断Point_Cluster链表来对每个道路交叉口赋值.<br>
+---------------------------------------------<br>
+5. 类的成员函数编写：<br>
+·RI.Generate_Point_Cluster(Point_Cluster_Part) #点簇分离归并函数<br>
+·RI.Generate_Drive_type() #提取并生成每个路口的行驶规则<br>
+每个道路交叉口对象该函数的返回值为：<br>
+List: Grive_Principle(str):<br>
+**[RIID Lon Lat CW1 CW2 CW3 CW4]CWn='0011' 左转 右转 直行 掉头， 0代表允许，1代表禁止**
+
+5. 数据可视化
+对生成的道路行驶规则与道路交叉口数据进行可视化展示，具体想怎么做可以自行发挥
+
+
 
 
 
@@ -66,7 +82,6 @@ List: dtype : Str [PointID, Lon, Lat, Type, GPSTime]<br>
  **陈德跃** :<br>
 
  **翟富祥** :<br>
-  1.生成Vorionio三角形<br>
 
  **邹玮杰** :<br>
 

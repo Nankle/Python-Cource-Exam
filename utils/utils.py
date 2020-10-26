@@ -81,6 +81,20 @@ class SHAPE:
 
         ds.Destroy() #关闭文件
 
+#道路交叉口类，用于进行整体的数据处理封装
+class Road_Intersection:
+
+    def __init__(self, Lon, Lat):
+        self.lon = Lon  #道路交叉口经度
+        self.lat = Lat  #道路交叉口纬度
+
+    def RI.Generate_Point_Cluster(Point_Cluster_Part): #点簇分离归并函数<br>
+        pass
+
+    def RI.Generate_Drive_type(): #提取并生成每个路口的行驶规则<br>
+        pass
+
+
 if __name__ == "__main__":
     test = SHAPE()
     #读出点SHAPE文件的坐标和属性，存为CSV文本文件。

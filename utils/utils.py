@@ -4,11 +4,14 @@
 # Python Space Analysis Final Exam
 
 import os
+import sys
+import math
 import numpy as np
 from  osgeo import gdal, ogr
 import matplotlib.pyplot as plt
 
 import ClusterPoint as CP
+from tqdm import tqdm
 
 Road_Intersection_Path = 'data/traffic_intersection_zhongguancun.shp'
 
@@ -85,22 +88,97 @@ class Road_Intersection:
     def __init__(self, Lon, Lat):
         self.lon = Lon  #道路交叉口经度
         self.lat = Lat  #道路交叉口纬度
+        self.tag = [[24352, 22825, 24013],[]]  # 属性表shape
 
-    def Generate_Point_Cluster(Point_Cluster_Part): #点簇分离归并函数<br>
+    def Generate_Point_Cluster(Point_Cluster_Part): #点簇分离归并函数
+        self.PC = Point_Cluster_Part
+
+    def Generate_Drive_type(): #提取并生成每个路口的行驶规则
+        
         pass
 
-    def Generate_Drive_type(): #提取并生成每个路口的行驶规则<br>
-        pass
-
-def Parse_Model():
+def Parse_Model(RI, Point_Cluster):
     #读取点簇数据，生成RoadIntersection对象
-    pass
+    PC = SHAPE()
+    spatialref,geomtype,geomlist,fieldlist,reclist = PC.read_shp('OutPut/ClusterPoint.shp')
+
+
+    Label = []
+    for i in reclist:
+        Label.append(float(i['label']))    #int
+
+    # print(type(Label[0]))
+    classes = len(set(Label))
+    print(f'Items Count:{len(reclist)}\nLabels Count:{classes}')
+
+    # DataArray = np.vstack((np.array(Label), np.array(drive_type), np.array(gpstime), \
+    #     np.array(Lat), np.array(Lon))).T
+    # print(DataArray.shape)
+    # print(reclist[0])
+    # print(DataArray[])
+
+    classification = []
+    #每个 i 为一类
+    for i in tqdm(range(classes),desc='判断每个点簇的归属'):
+        # this_class_Point_Class = np.where(DataArray[:, 0]==i)
+        this_class_Point_Class = [field for field in reclist if field['label']==i]
+
+        gpstime = []
+        Lat = []
+        Lon = []
+
+        for item in this_class_Point_Class:
+            Lat.append(item['Lat'])    #float
+            Lon.append(item['Lon'])    #float
+            gpstime.append(item['gpstim'])   #float
+        
+        mintime_index = gpstime.index(min(gpstime))
+        maxtime_index = gpstime.index(max(gpstime))
+        PC_Min_Lat = Lat[mintime_index]
+        PC_Min_Lon = Lon[mintime_index]
+        PC_Max_Lat = Lat[maxtime_index]
+        PC_Max_Lon = Lon[maxtime_index]
+
+        Which_RI = -1
+        dis_mintime = 0    #最小gpstime对应的到各个路口的距离
+        dis_maxtime = sys.maxsize    #最大gpstime对应的到各个路口的距离
+        for index, RI_Item in enumerate(RI):
+            RI_Lat = RI_Item.lat
+            RI_Lon = RI_Item.lon
+
+            maxtime_distance = (PC_Max_Lat-RI_Lat)**2 + (PC_Max_Lon-RI_Lon)**2
+            if maxtime_distance < dis_maxtime:
+                dis_maxtime = maxtime_distance
+                Which_RI = index
+                dis_mintime = (PC_Min_Lat-RI_Lat)**2 + (PC_Min_Lon-RI_Lon)**2
+
+        if dis_maxtime < dis_mintime:
+            #表示为驶入车辆簇
+            classification.append((this_class_Point_Class, Which_RI))
+            RI[Which_RI].Generate_Point_Cluster(this_class_Point_Class)
+
+    print(len(classification))
+    print(type(classification[100]))
+    print(classification[:][1]==2)
+
+    '''
+
+    找到每一个点簇对应的道路交叉口应该是哪个
+    判断条件为：
+    1. GPSTime 最后（也就是最大）的那个点，距离最近的那个道路交叉口
+    2. GPSTime 最大的那个点，距离道路交叉口的距离应该比Time最小值的点到其的距离小，这样才为驶入路口
+
+    '''
+    for RI_Item in RI:
+        Final_Result = RI_Item.Generate_Drive_type()
+    
+    return Final_Result
 
 def Read_Road_Intersection(path_RI):
     Road_I = SHAPE()
     spatialref,geomtype,geomlist,fieldlist,reclist = Road_I.read_shp(path_RI)
-    print(f'fieldList:\n{fieldlist}')
-    print(f'Road_Intersection_Number:{len(reclist)},type:{type(reclist)}')
+    # print(f'fieldList:\n{fieldlist}')
+    # print(f'Road_Intersection_Number:{len(reclist)},type:{type(reclist)}')
     list_RI = []
     for index, RI in enumerate(reclist):
         RI_Lon = float(RI['Lon'])
@@ -142,5 +220,9 @@ if __name__ == "__main__":
     # print(f'reclist:{reclist}')
     # print(geomlist[0], reclist[0][fieldlist[0][ 'name']])
 
-    Read_Road_Intersection(Road_Intersection_Path)
+    RI = Read_Road_Intersection(Road_Intersection_Path)
+    Point_Cluster = []
+    Final_Result = Parse_Model(RI, Point_Cluster)
+
+
 

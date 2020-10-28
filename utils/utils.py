@@ -88,10 +88,10 @@ class Road_Intersection:
         self.lon = Lon  #道路交叉口经度
         self.lat = Lat  #道路交叉口纬度
 
-    def RI.Generate_Point_Cluster(Point_Cluster_Part): #点簇分离归并函数<br>
+    def Generate_Point_Cluster(Point_Cluster_Part): #点簇分离归并函数<br>
         pass
 
-    def RI.Generate_Drive_type(): #提取并生成每个路口的行驶规则<br>
+    def Generate_Drive_type(): #提取并生成每个路口的行驶规则<br>
         pass
 
 
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     #读出点SHAPE文件的坐标和属性，存为CSV文本文件。
     # fh = open("OutputResult/stations.csv",'w')
     # fh.write("x,y,elev,prec\n")
-    spatialref,geomtype,geomlist,fieldlist,reclist = test.read_shp("data/20201006_carvideo_orig.shp")
+    spatialref,geomtype,geomlist,fieldlist,reclist = test.read_shp('OutPut/ClusterPoint.shp')
     # for i in range(len(geomlist)):
     #     pnt = ogr.CreateGeometryFromWkt(geomlist[i])
     #     x,y = pnt.GetX(),pnt.GetY()
@@ -125,4 +125,4 @@ if __name__ == "__main__":
     print(spatialref.ExportToPrettyWkt())
     # print(geomtype)
     print(fieldlist[0])
-    print(geomlist[0], reclist[0][fieldlist[0][ 'name']])
+    # print(geomlist[0], reclist[0][fieldlist[0][ 'name']])

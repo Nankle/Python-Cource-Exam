@@ -72,7 +72,7 @@ List: Grive_Principle(str):<br>
   |road_zhongguancun.shp | 道路线目标矢量文件 | None |
   |tracking_points_heading.shp| 行车轨迹点数据，包含时间，位置，和行驶朝向 | Time、经纬度、Heading|
   |traffic_intersection_zhongguancun.shp|道路交叉口点数据| 道路交叉口位置点数据 | |
-  |zhongguancun.jpg| 实验区卫星数据 |None|None|
+  |zhongguancun.jpg| 实验区航空影像 |None|None|
 
   3.矢量数据可视化  `Done` **utils.SHAPE class** <br> 
 

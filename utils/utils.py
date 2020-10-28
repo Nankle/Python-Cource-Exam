@@ -36,8 +36,8 @@ class SHAPE:
             fieldlist += [fddict]
 
         geomlist, reclist = [], [] #SF数据记录 – 几何对象及其对应属性
-        feature = layer.GetNextFeature() #获得第一个SF
-        while feature is not None:
+        feature = layer.GetNextFeature() #获得第一个SF，横着是一条feature
+        while feature is not None: 
             geom = feature.GetGeometryRef()
             geomlist += [geom.ExportToWkt()]
             rec = {}
@@ -120,9 +120,8 @@ if __name__ == "__main__":
     '''
 
     #显示字段列表, 几何对象及属性值
-    print(len(fieldlist))
-    print(len(geomlist))
-    print(spatialref.ExportToPrettyWkt())
+    print(f'fieldList:{fieldlist}')
+    # print(len(geomlist))
     # print(geomtype)
-    print(fieldlist[0])
+    # print(f'reclist:{reclist}')
     # print(geomlist[0], reclist[0][fieldlist[0][ 'name']])

@@ -90,6 +90,7 @@ class Road_Intersection:
         self.lon = Lon  #道路交叉口经度
         self.lat = Lat  #道路交叉口纬度
         self.PC = []
+        
         self.tag = [[24352, 22825, 24013],\
             [32735, 23500, 31077]]  # 属性表shape
 
@@ -98,6 +99,25 @@ class Road_Intersection:
 
     def Generate_Drive_type(self): #提取并生成每个路口的行驶规则
         print(f'Cluster Number in this RI:{len(self.PC)}\n')
+        '''
+        0：左转                  
+        1：右转
+        2：直行
+        3：调头
+        4：左转右转
+        5：左转右转直行
+        6：右转直行
+        7：左转直行
+        8：左转直行调头
+        9：左转调头
+        10：直行调头
+        [RIID Lon Lat CW1 CW2 CW3 CW4]CWn='0011' 左转 右转 直行 掉头， 0代表允许，1代表禁止
+        '''
+        # for PC_Item in self.PC:
+        #     # print('***************',PC_Item)
+        #     for et in PC_Item:
+        #         for KEYS in et.keys():
+        #             if int(et[KEYS]) = 0:
     
     def Generate_copywrite(self):
         for t in self.tag:
@@ -128,6 +148,7 @@ def Parse_Model(RI, Point_Cluster):
     for i in tqdm(range(classes),desc='判断每个点簇的归属'):
         # this_class_Point_Class = np.where(DataArray[:, 0]==i)
         this_class_Point_Class = [field for field in reclist if field['label']==i]
+        # print('************************************\n',this_class_Point_Class)
 
         gpstime = []
         Lat = []
@@ -177,9 +198,13 @@ def Parse_Model(RI, Point_Cluster):
     print( uch , " 对应的字符为", chr(uch))
     '''
     ii = 0
+    Final_Result = []
+
+    #[RIID Lon Lat CW1 CW2 CW3 CW4]CWn='0011' 左转 右转 直行 掉头， 0代表允许，1代表禁止
+
     for RI_Item in RI:
         print(f'Road_Intersection[{ii}]:')
-        Final_Result = RI_Item.Generate_Drive_type()
+        Final_Result.append(RI_Item.Generate_Drive_type())
         ii += 1
         if ii == 40:
             RI_Item.Generate_copywrite()

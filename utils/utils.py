@@ -6,6 +6,7 @@
 import os
 import sys
 import math
+import time
 import numpy as np
 from  osgeo import gdal, ogr
 import matplotlib.pyplot as plt
@@ -88,20 +89,25 @@ class Road_Intersection:
     def __init__(self, Lon, Lat):
         self.lon = Lon  #道路交叉口经度
         self.lat = Lat  #道路交叉口纬度
-        self.tag = [[24352, 22825, 24013],[]]  # 属性表shape
+        self.PC = []
+        self.tag = [[24352, 22825, 24013],\
+            [32735, 23500, 31077]]  # 属性表shape
 
-    def Generate_Point_Cluster(Point_Cluster_Part): #点簇分离归并函数
-        self.PC = Point_Cluster_Part
+    def Generate_Point_Cluster(self, Point_Cluster_Part): #点簇分离归并函数
+        self.PC.append(Point_Cluster_Part)
 
-    def Generate_Drive_type(): #提取并生成每个路口的行驶规则
-        
-        pass
+    def Generate_Drive_type(self): #提取并生成每个路口的行驶规则
+        print(f'Cluster Number in this RI:{len(self.PC)}\n')
+    
+    def Generate_copywrite(self):
+        for t in self.tag:
+            print(f'copyright:{chr(t[0])}{chr(t[1])}{chr(t[2])}-->{time.asctime(time.localtime(time.time()))}')
+            # print(f'copyright:{time.time()}')
 
 def Parse_Model(RI, Point_Cluster):
     #读取点簇数据，生成RoadIntersection对象
     PC = SHAPE()
     spatialref,geomtype,geomlist,fieldlist,reclist = PC.read_shp('OutPut/ClusterPoint.shp')
-
 
     Label = []
     for i in reclist:
@@ -167,10 +173,16 @@ def Parse_Model(RI, Point_Cluster):
     判断条件为：
     1. GPSTime 最后（也就是最大）的那个点，距离最近的那个道路交叉口
     2. GPSTime 最大的那个点，距离道路交叉口的距离应该比Time最小值的点到其的距离小，这样才为驶入路口
-
+    print( ch + " 的ASCII 码为", ord(ch))
+    print( uch , " 对应的字符为", chr(uch))
     '''
+    ii = 0
     for RI_Item in RI:
+        print(f'Road_Intersection[{ii}]:')
         Final_Result = RI_Item.Generate_Drive_type()
+        ii += 1
+        if ii == 40:
+            RI_Item.Generate_copywrite()
     
     return Final_Result
 
@@ -223,6 +235,4 @@ if __name__ == "__main__":
     RI = Read_Road_Intersection(Road_Intersection_Path)
     Point_Cluster = []
     Final_Result = Parse_Model(RI, Point_Cluster)
-
-
 

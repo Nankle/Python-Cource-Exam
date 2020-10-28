@@ -5,15 +5,13 @@
 
 import os
 import numpy as np
-from  osgeo import gdal
+from  osgeo import gdal, ogr
 import matplotlib.pyplot as plt
 
+import ClusterPoint as CP
 
-def func_1():
-    pass
+Road_Intersection_Path = 'data/traffic_intersection_zhongguancun.shp'
 
-from osgeo import ogr, osr
-import os
 
 class SHAPE:
 
@@ -94,13 +92,31 @@ class Road_Intersection:
     def Generate_Drive_type(): #提取并生成每个路口的行驶规则<br>
         pass
 
+def Parse_Model():
+    #读取点簇数据，生成RoadIntersection对象
+    pass
+
+def Read_Road_Intersection(path_RI):
+    Road_I = SHAPE()
+    spatialref,geomtype,geomlist,fieldlist,reclist = Road_I.read_shp(path_RI)
+    print(f'fieldList:\n{fieldlist}')
+    print(f'Road_Intersection_Number:{len(reclist)},type:{type(reclist)}')
+    list_RI = []
+    for index, RI in enumerate(reclist):
+        RI_Lon = float(RI['Lon'])
+        RI_Lat = float(RI['Lat'])
+
+        list_RI.append(Road_Intersection(RI_Lon, RI_Lat))
+    
+    return list_RI
+
 
 if __name__ == "__main__":
-    test = SHAPE()
+    # test = SHAPE()
     #读出点SHAPE文件的坐标和属性，存为CSV文本文件。
     # fh = open("OutputResult/stations.csv",'w')
     # fh.write("x,y,elev,prec\n")
-    spatialref,geomtype,geomlist,fieldlist,reclist = test.read_shp('OutPut/ClusterPoint.shp')
+    # spatialref,geomtype,geomlist,fieldlist,reclist = test.read_shp('OutPut/ClusterPoint.shp')
     # for i in range(len(geomlist)):
     #     pnt = ogr.CreateGeometryFromWkt(geomlist[i])
     #     x,y = pnt.GetX(),pnt.GetY()
@@ -120,8 +136,11 @@ if __name__ == "__main__":
     '''
 
     #显示字段列表, 几何对象及属性值
-    print(f'fieldList:{fieldlist}')
+    # print(f'fieldList:{fieldlist}')
     # print(len(geomlist))
     # print(geomtype)
     # print(f'reclist:{reclist}')
     # print(geomlist[0], reclist[0][fieldlist[0][ 'name']])
+
+    Read_Road_Intersection(Road_Intersection_Path)
+

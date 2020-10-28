@@ -227,6 +227,52 @@ def CreatRect(inshp,outshp):
         layer.CreateFeature(outFeature)
     ds.Destroy()
 
+def Getheading(inshp,outshp):
+    in_ds = ogr.Open(inshp, False)  # False - read only, True - read/write
+    in_layer = in_ds.GetLayer(0)
+    in_lydefn = in_layer.GetLayerDefn()
+    fieldlist = []
+    for i in range(in_lydefn.GetFieldCount()):
+        fddefn = in_lydefn.GetFieldDefn(i)
+        fddict = {'name': fddefn.GetName(), 'type': fddefn.GetType(),
+                  'width': fddefn.GetWidth(), 'decimal': fddefn.GetPrecision()}
+        fieldlist += [fddict]
+
+    reclist = {}
+    feature = in_layer.GetNextFeature()
+    while feature is not None:
+        gpstim = feature.GetField('tim')
+        heading =  feature.GetField('heading')
+        reclist[gpstim] = heading
+        feature = in_layer.GetNextFeature()
+    in_ds.Destroy()
+
+    # -----------------------------===== =====-------------------------------
+
+    out_ds = ogr.Open(outshp,True)  # False - read only, True - read/write
+    out_layer = out_ds.GetLayer(0)
+    out_lydefn = out_layer.GetLayerDefn()
+    field = ogr.FieldDefn('heading', ogr.OFTReal)
+    field.SetWidth(18)
+    field.SetPrecision(11)
+
+    print(out_lydefn.GetFieldIndex('heading') )
+    if out_lydefn.GetFieldIndex('heading') == -1:
+        out_layer.CreateField(field)
+
+
+    feature = out_layer.GetNextFeature()
+    while feature is not None:
+        gpstim =feature.GetField('gpstim')
+        heading =reclist[gpstim]
+        print(heading)
+        feature.SetField('heading',heading)
+        out_layer.SetFeature(feature)
+
+        feature = out_layer.GetNextFeature()
+
+    out_ds.Destroy()
+
 
 if __name__ == '__main__':
 
@@ -234,18 +280,22 @@ if __name__ == '__main__':
     inshp = 'Data/20201006_carvideo_orig.shp'
     Dataset,simple = CreatSential(inshp)
 
-    for item in Dataset:
-        print(item)
-    exit()
+    # for item in Dataset:
+    #     #     print(item)
+    #     # exit()
 
     if not os.path.exists('Output/'): os.makedirs('Output/')
 
     outshp1 = 'Output/ClusterPoint.shp'
     outshp2 = 'Output/SimplePoint.shp'
 
-    # CreatSetPoint(Dataset,inshp,outshp1)
-    # CreatSetPoint(simple,inshp,outshp2)
+    CreatSetPoint(Dataset,inshp,outshp1)
+    CreatSetPoint(simple,inshp,outshp2)
 
     outrectshp = 'Output/ClusterRect.shp'
     CreatRect(outshp1,outrectshp)
+
+    # inheading = 'Data/tracking_points_heading.shp'
+    # outshp = 'Data/20201006_carvideo_orig.shp'
+    # Getheading(inheading,outshp)
     pass

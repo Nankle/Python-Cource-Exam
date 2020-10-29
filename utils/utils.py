@@ -113,8 +113,8 @@ class Road_Intersection:
         10：直行调头
         [RIID Lon Lat CW1 CW2 CW3 CW4]CWn='0011' 左转 右转 直行 掉头， 0代表允许，1代表禁止
         '''
-        # for PC_Item in self.PC:
-        #     # print('***************',PC_Item)
+        for PC_Item in self.PC:
+            print(PC_Item[0])
         #     for et in PC_Item:
         #         for KEYS in et.keys():
         #             if int(et[KEYS]) = 0:

@@ -3,6 +3,7 @@ import os
 import time
 from tqdm import tqdm
 import sys, math
+import numpy as np
 
 Road_Intersection_Path = \
     '/Users/yunsheng666/Documents/GitHub/Python-Cource-Exam/data/traffic_intersection_zhongguancun.shp'
@@ -82,6 +83,7 @@ class Road_Intersection:
         self.lon = Lon  # 道路交叉口经度
         self.lat = Lat  # 道路交叉口纬度
         self.PC = []
+        self.RI_intersection = np.array([])
         self.tag = [[24352, 22825, 24013], \
                     [32735, 23500, 31077]]  # 属性表shape
 
@@ -89,12 +91,8 @@ class Road_Intersection:
         self.PC.append(Point_Cluster_Part)
 
     def Generate_Drive_type(self):  # 提取并生成每个路口的行驶规则
-        print(f'Cluster Number in this RI:{len(self.PC)}')
-        # cw1 = np.zeros((1,4))
-        # cw2 = np.zeros((1,4))
-        # cw3 = np.zeros((1,4))
-        # cw4 = np.zeros((1,4))
-        # list = [[0],[1],[2],[3],[0,1],[0,1,2],[1,2],[0,2],[0,2,3],[0,3],[2,3]]  # 16个规则
+        # print(f'Cluster Number in this RI:{len(self.PC)}')
+        # print(f'Lon:{self.lon}', f'Lat:{self.lat}')
         list1 = []
         list2 = []
         list3 = []
@@ -111,17 +109,22 @@ class Road_Intersection:
                         list3.append(j['type'])
                     if j['heading'] > 225 and j['heading'] <= 315:
                         list4.append(j['type'])
-            dict1 = typediv(list1)
-            dict2 = typediv(list2)
-            dict3 = typediv(list3)
-            dict4 = typediv(list4)
-            print(dict1)
-            print(dict2)
-            print(dict3)
-            print(dict4)
-            print('-------')
+            dict1, arr1 = typediv(list1)
+            dict2, arr2 = typediv(list2)
+            dict3, arr3 = typediv(list3)
+            dict4, arr4 = typediv(list4)
+            self.RI_intersection = np.concatenate((arr1, arr2, arr3, arr4), 0).reshape(-1, 4)
+
+            # print(dict1, arr1)
+            # print(dict2, arr2)
+            # print(dict3, arr3)
+            # print(dict4, arr4)
+            # print('-------')
         else:
-            print('no intersection')
+            pass
+            # print('no intersection')
+
+
 
 
     def Generate_copywrite(self):
@@ -142,7 +145,7 @@ def Parse_Model(RI, Point_Cluster):
 
     # print(type(Label[0]))
     classes = len(set(Label))
-    print(f'Items Count:{len(reclist)}\nLabels Count:{classes}')
+    # print(f'Items Count:{len(reclist)}\nLabels Count:{classes}')
 
     # DataArray = np.vstack((np.array(Label), np.array(drive_type), np.array(gpstime), \
     #     np.array(Lat), np.array(Lon))).T
@@ -190,9 +193,9 @@ def Parse_Model(RI, Point_Cluster):
             classification.append((this_class_Point_Class, Which_RI))
             RI[Which_RI].Generate_Point_Cluster(this_class_Point_Class)
 
-    print(len(classification))
-    print(type(classification[100]))
-    print(classification[:][1] == 2)
+    # print(len(classification))
+    # print(type(classification[100]))
+    # print(classification[:][1] == 2)
 
     '''
 
@@ -204,14 +207,21 @@ def Parse_Model(RI, Point_Cluster):
     print( uch , " 对应的字符为", chr(uch))
     '''
     ii = 0
-    for RI_Item in RI:
-        print(f'Road_Intersection[{ii}]:')
-        Final_Result = RI_Item.Generate_Drive_type()
+    final_intersection_arr = np.zeros((4, 4), dtype=np.int)
+    for index, RI_Item in enumerate(RI):
+        # print(f'Road_Intersection[{ii}]:')
+        RI_Item.Generate_Drive_type()
+        if RI_Item.RI_intersection.shape[0] == 0:
+            tem = index * np.ones((4, 4), dtype=np.int)
+            final_intersection_arr = np.concatenate((final_intersection_arr, tem), 0)
+            continue
+        final_intersection_arr = np.concatenate((final_intersection_arr, RI_Item.RI_intersection), 0)
         ii += 1
         if ii == 40:
             RI_Item.Generate_copywrite()
+    # print(final_intersection_arr[4:, :])
 
-    return Final_Result
+    return final_intersection_arr[4:, :].reshape(46, 4, 4)
 
 
 def Read_Road_Intersection(path_RI):
@@ -220,93 +230,92 @@ def Read_Road_Intersection(path_RI):
     # print(f'fieldList:\n{fieldlist}')
     # print(f'Road_Intersection_Number:{len(reclist)},type:{type(reclist)}')
     list_RI = []
+    intersec_arr = np.zeros((len(reclist), 2))
     for index, RI in enumerate(reclist):
         RI_Lon = float(RI['Lon'])
         RI_Lat = float(RI['Lat'])
+        intersec_arr[index, 0] = float(RI['Lon'])
+        intersec_arr[index, 1] = float(RI['Lat'])
 
         list_RI.append(Road_Intersection(RI_Lon, RI_Lat))
 
-    return list_RI
+    return list_RI, intersec_arr
 
 
 """按时间点 合并道路类型   roll up on type"""
 """只有三类完全不相关 左转 右转 直行 掉头 最优可4个字节表达   先使用四个开关实现"""
-
-
 # cardf
 def typediv(typelist):  # 根据type 将数据整合
     div = {"l": 0, "r": 0, "s": 0, "t": 0}
+    dir_arr = np.array([0, 0, 0, 0])
     for tp in typelist:
         if tp == 0:
             div['l'] = 1
+            dir_arr[0] = 1
         elif tp == 1:
             div['r'] = 1
+            dir_arr[1] = 1
         elif tp == 2:
             div['s'] = 1
+            dir_arr[2] = 1
         elif tp == 3:
             div['t'] = 1
+            dir_arr[3] = 1
         elif tp == 4:
             div['l'] = 1
             div['r'] = 1
+            dir_arr[0] = 1
+            dir_arr[1] = 1
         elif tp == 5:
             div['l'] = 1
             div['r'] = 1
             div['s'] = 1
+            dir_arr[0] = 1
+            dir_arr[1] = 1
+            dir_arr[2] = 1
         elif tp == 6:
             div['r'] = 1
             div['s'] = 1
+            dir_arr[1] = 1
+            dir_arr[2] = 1
         elif tp == 7:
             div['l'] = 1
             div['s'] = 1
+            dir_arr[0] = 1
+            dir_arr[2] = 1
         elif tp == 8:
             div['l'] = 1
             div['s'] = 1
             div['t'] = 1
+            dir_arr[0] = 1
+            dir_arr[2] = 1
+            dir_arr[3] = 1
         elif tp == 9:
             div['l'] = 1
             div['t'] = 1
+            dir_arr[0] = 1
+            dir_arr[3] = 1
         elif tp == 10:
             div['s'] = 1
             div['t'] = 1
+            dir_arr[2] = 1
+            dir_arr[3] = 1
         else:
             print("erro")
 
-    return div
+    return div, dir_arr
 
 
 if __name__ == "__main__":
     test = SHAPE()
-    #读出点SHAPE文件的坐标和属性，存为CSV文本文件。
-    # fh = open("OutputResult/stations.csv",'w')
-    # fh.write("x,y,elev,prec\n")
     spatialref, geomtype, geomlist, fieldlist, reclist = test.read_shp(
         '/Users/yunsheng666/Documents/GitHub/Python-Cource-Exam/OutPut/ClusterPoint.shp')
-    # for i in range(len(geomlist)):
-    #     pnt = ogr.CreateGeometryFromWkt(geomlist[i])
-    #     x,y = pnt.GetX(),pnt.GetY()
-    #     e,p = reclist[i]["ELEV"],reclist[i]["ANN_PREC"]
-    #     s = "%f,%f,%d,%.2f\n" % (x,y,e,p)
-    #     fh.write(s)
-    # fh.close()
 
-    '''
-
-    #拷贝Shape文件
-    filename = "cntry98.shp"
-    spatialref,geomtype,geomlist,fieldlist,reclist = test.read_shp(filename)
-    filename = "cntry98_new.shp"
-    test.write_shp(filename,spatialref,geomtype,geomlist,fieldlist,reclist)
-
-    '''
-
-    #显示字段列表, 几何对象及属性值
-    # print(f'fieldList:{fieldlist}')
-    # print(len(geomlist))
-    # print(geomtype)
-    # print(f'reclist:{reclist}')
-    # print(reclist[29])
-
-
-    RI = Read_Road_Intersection(Road_Intersection_Path)
+    RI, intersection = Read_Road_Intersection(Road_Intersection_Path)
+    print('交叉口经纬度')     # 每个道路交叉口及其经纬度，共46个
+    print(intersection)
     Point_Cluster = []
     Final_Result = Parse_Model(RI, Point_Cluster)
+    print('交叉口对应的道路方向及其规则')
+    print(Final_Result)     # 46*4*4的矩阵，46代表每个道路交叉口，4*4矩阵中每行代表一个方向(从正北开始顺时针转，四个方向)
+                            # 每列代表是否能通行(依次是左转，右转，直行，拐弯；0代表不能通行，1代表可以通行）

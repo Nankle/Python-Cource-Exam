@@ -127,7 +127,7 @@ class Road_Intersection:
 def Parse_Model(RI, Point_Cluster):
     #读取点簇数据，生成RoadIntersection对象
     PC = SHAPE()
-    spatialref,geomtype,geomlist,fieldlist,reclist = PC.read_shp('OutPut/ClusterPoint.shp')
+    spatialref,geomtype,geomlist,fieldlist,reclist = PC.read_shp('../OutPut/ClusterPoint.shp')
 
     Label = []
     for i in reclist:
@@ -184,9 +184,7 @@ def Parse_Model(RI, Point_Cluster):
             classification.append((this_class_Point_Class, Which_RI))
             RI[Which_RI].Generate_Point_Cluster(this_class_Point_Class)
 
-    print(len(classification))
-    print(type(classification[100]))
-    print(classification[:][1]==2)
+
 
     '''
 
@@ -204,10 +202,13 @@ def Parse_Model(RI, Point_Cluster):
 
     for RI_Item in RI:
         print(f'Road_Intersection[{ii}]:')
+        print(RI_Item.Generate_Drive_type())
+
         Final_Result.append(RI_Item.Generate_Drive_type())
         ii += 1
         if ii == 40:
             RI_Item.Generate_copywrite()
+
     
     return Final_Result
 
@@ -256,7 +257,7 @@ if __name__ == "__main__":
     # print(geomtype)
     # print(f'reclist:{reclist}')
     # print(geomlist[0], reclist[0][fieldlist[0][ 'name']])
-
+    Road_Intersection_Path = '../OutPut/ClusterPoint.shp'
     RI = Read_Road_Intersection(Road_Intersection_Path)
     Point_Cluster = []
     Final_Result = Parse_Model(RI, Point_Cluster)

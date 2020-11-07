@@ -32,7 +32,7 @@ def draw_on_map(df,sav_path):
     #folium.RegularPolygonMarker([row["lat"], row["lon"]], popup="{0}:{1}".format(row["cities"], row["GDP"]),number_of_sides=10,radius=5).add_to(marker_cluster)
     
     World_map.save(sav_path)
-    display(World_map)
+    # display(World_map)
     return World_map
 
 if __name__=='__main__':

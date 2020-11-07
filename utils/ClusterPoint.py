@@ -64,7 +64,6 @@ def CreatSential(shp):
 
     return DataSet,SimplePoint+ oringin
 
-
 # 读入点簇或者孤立点，输出成shp格式
 def CreatSetPoint(ListDataset,inshp,outshp):
     in_ds = ogr.Open(inshp, False)  # False - read only, True - read/write
@@ -142,6 +141,51 @@ def CreatSetPoint(ListDataset,inshp,outshp):
     # close
     ds.Destroy()
 
+def Getheading(inshp,outshp):
+    in_ds = ogr.Open(inshp, False)  # False - read only, True - read/write
+    in_layer = in_ds.GetLayer(0)
+    in_lydefn = in_layer.GetLayerDefn()
+    fieldlist = []
+    for i in range(in_lydefn.GetFieldCount()):
+        fddefn = in_lydefn.GetFieldDefn(i)
+        fddict = {'name': fddefn.GetName(), 'type': fddefn.GetType(),
+                  'width': fddefn.GetWidth(), 'decimal': fddefn.GetPrecision()}
+        fieldlist += [fddict]
+
+    reclist = {}
+    feature = in_layer.GetNextFeature()
+    while feature is not None:
+        gpstim = feature.GetField('tim')
+        heading =  feature.GetField('heading')
+        reclist[gpstim] = heading
+        feature = in_layer.GetNextFeature()
+    in_ds.Destroy()
+
+    # -----------------------------===== =====-------------------------------
+
+    out_ds = ogr.Open(outshp,True)  # False - read only, True - read/write
+    out_layer = out_ds.GetLayer(0)
+    out_lydefn = out_layer.GetLayerDefn()
+    field = ogr.FieldDefn('heading', ogr.OFTReal)
+    field.SetWidth(18)
+    field.SetPrecision(11)
+
+    print(out_lydefn.GetFieldIndex('heading') )
+    if out_lydefn.GetFieldIndex('heading') == -1:
+        out_layer.CreateField(field)
+
+
+    feature = out_layer.GetNextFeature()
+    while feature is not None:
+        gpstim =feature.GetField('gpstim')
+        heading =reclist[gpstim]
+        print(heading)
+        feature.SetField('heading',heading)
+        out_layer.SetFeature(feature)
+
+        feature = out_layer.GetNextFeature()
+
+    out_ds.Destroy()
 
 # 读入点簇，根据label的分类，将每个点簇生成一个矩形
 def CreatRect(inshp,outshp):
@@ -227,51 +271,7 @@ def CreatRect(inshp,outshp):
         layer.CreateFeature(outFeature)
     ds.Destroy()
 
-def Getheading(inshp,outshp):
-    in_ds = ogr.Open(inshp, False)  # False - read only, True - read/write
-    in_layer = in_ds.GetLayer(0)
-    in_lydefn = in_layer.GetLayerDefn()
-    fieldlist = []
-    for i in range(in_lydefn.GetFieldCount()):
-        fddefn = in_lydefn.GetFieldDefn(i)
-        fddict = {'name': fddefn.GetName(), 'type': fddefn.GetType(),
-                  'width': fddefn.GetWidth(), 'decimal': fddefn.GetPrecision()}
-        fieldlist += [fddict]
 
-    reclist = {}
-    feature = in_layer.GetNextFeature()
-    while feature is not None:
-        gpstim = feature.GetField('tim')
-        heading =  feature.GetField('heading')
-        reclist[gpstim] = heading
-        feature = in_layer.GetNextFeature()
-    in_ds.Destroy()
-
-    # -----------------------------===== =====-------------------------------
-
-    out_ds = ogr.Open(outshp,True)  # False - read only, True - read/write
-    out_layer = out_ds.GetLayer(0)
-    out_lydefn = out_layer.GetLayerDefn()
-    field = ogr.FieldDefn('heading', ogr.OFTReal)
-    field.SetWidth(18)
-    field.SetPrecision(11)
-
-    print(out_lydefn.GetFieldIndex('heading') )
-    if out_lydefn.GetFieldIndex('heading') == -1:
-        out_layer.CreateField(field)
-
-
-    feature = out_layer.GetNextFeature()
-    while feature is not None:
-        gpstim =feature.GetField('gpstim')
-        heading =reclist[gpstim]
-        print(heading)
-        feature.SetField('heading',heading)
-        out_layer.SetFeature(feature)
-
-        feature = out_layer.GetNextFeature()
-
-    out_ds.Destroy()
 
 
 if __name__ == '__main__':

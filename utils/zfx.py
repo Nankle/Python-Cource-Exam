@@ -5,12 +5,8 @@ from tqdm import tqdm
 import sys, math
 import numpy as np
 
-Road_Intersection_Path = \
-    '/Users/yunsheng666/Documents/GitHub/Python-Cource-Exam/data/traffic_intersection_zhongguancun.shp'
-
 
 class SHAPE:
-
     #读ArcGIS Shape文件
     def read_shp(self, filename):
         ds = ogr.Open(filename, False)  #代开Shape文件（False - read only, True - read/write）
@@ -75,7 +71,6 @@ class SHAPE:
 
         ds.Destroy()  # 关闭文件
 
-
 # 道路交叉口类，用于进行整体的数据处理封装
 class Road_Intersection:
 
@@ -132,12 +127,11 @@ class Road_Intersection:
             print(f'copyright:{chr(t[0])}{chr(t[1])}{chr(t[2])}-->{time.asctime(time.localtime(time.time()))}')
             # print(f'copyright:{time.time()}')
 
-
 def Parse_Model(RI, Point_Cluster):
     # 读取点簇数据，生成RoadIntersection对象
     PC = SHAPE()
     spatialref, geomtype, geomlist, fieldlist, reclist = PC.read_shp(
-        '/Users/yunsheng666/Documents/GitHub/Python-Cource-Exam/OutPut/ClusterPoint.shp')
+        Point_Cluster)
 
     Label = []
     for i in reclist:
@@ -145,13 +139,7 @@ def Parse_Model(RI, Point_Cluster):
 
     # print(type(Label[0]))
     classes = len(set(Label))
-    # print(f'Items Count:{len(reclist)}\nLabels Count:{classes}')
 
-    # DataArray = np.vstack((np.array(Label), np.array(drive_type), np.array(gpstime), \
-    #     np.array(Lat), np.array(Lon))).T
-    # print(DataArray.shape)
-    # print(reclist[0])
-    # print(DataArray[])
 
     classification = []
     # 每个 i 为一类
@@ -222,7 +210,6 @@ def Parse_Model(RI, Point_Cluster):
     # print(final_intersection_arr[4:, :])
 
     return final_intersection_arr[4:, :].reshape(46, 4, 4)
-
 
 def Read_Road_Intersection(path_RI):
     Road_I = SHAPE()
@@ -308,14 +295,18 @@ def typediv(typelist):  # 根据type 将数据整合
 
 if __name__ == "__main__":
     test = SHAPE()
+    Point_Cluster ='../OutPut/ClusterPoint.shp'
     spatialref, geomtype, geomlist, fieldlist, reclist = test.read_shp(
-        '/Users/yunsheng666/Documents/GitHub/Python-Cource-Exam/OutPut/ClusterPoint.shp')
+        Point_Cluster)
 
+    Road_Intersection_Path = '../data/traffic_intersection_zhongguancun.shp'
     RI, intersection = Read_Road_Intersection(Road_Intersection_Path)
     print('交叉口经纬度')     # 每个道路交叉口及其经纬度，共46个
-    print(intersection)
-    Point_Cluster = []
+    print(intersection.shape)
+
+
     Final_Result = Parse_Model(RI, Point_Cluster)
     print('交叉口对应的道路方向及其规则')
-    print(Final_Result)     # 46*4*4的矩阵，46代表每个道路交叉口，4*4矩阵中每行代表一个方向(从正北开始顺时针转，四个方向)
+    print(Final_Result.shape)     # 46*4*4的矩阵，46代表每个道路交叉口，4*4矩阵中每行代表一个方向(从正北开始顺时针转，四个方向)
                             # 每列代表是否能通行(依次是左转，右转，直行，拐弯；0代表不能通行，1代表可以通行）
+    print(Final_Result)

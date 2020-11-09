@@ -2,13 +2,13 @@ import numpy as np
 import os
 import glob
 from osgeo import gdal
-from osgeo import ogr,osr
+from osgeo import ogr, osr
 from gdal import gdalconst
 import time
 from osgeo import ogr, osr
 import os
 from tqdm import tqdm
-import  sys
+import sys
 import matplotlib.pyplot as plt
 import cv2
 import pandas as pd
@@ -23,6 +23,8 @@ time_start = time.time()
 输出：带有gpstim的地面规则点，在该数据集基础上排除了孤立时间点，增强了属性label，同一label表示属于一类
 完成者：陈德跃
 '''
+
+
 def CreatSential(shp):
     driver = ogr.GetDriverByName("ESRI Shapefile")
     dataSource = driver.Open(shp, 1)
@@ -43,7 +45,7 @@ def CreatSential(shp):
     # exit()
 
     # TODO: 需要优化成动态的数字
-    print("Array Max:" ,Array.max())
+    print("Array Max:", Array.max())
     Data = np.zeros((5600,))
     Data[Array] = 1
 
@@ -65,13 +67,14 @@ def CreatSential(shp):
             else:
                 templist = []
 
-    for i ,it in enumerate(DataSet):
+    for i, it in enumerate(DataSet):
         DataSet[i] = it + oringin
 
-    return DataSet ,SimplePoint+ oringin
+    return DataSet, SimplePoint + oringin
+
 
 # 读入点簇或者孤立点，输出成shp格式
-def CreatSetPoint(ListDataset ,inshp ,outshp):
+def CreatSetPoint(ListDataset, inshp, outshp):
     in_ds = ogr.Open(inshp, False)  # False - read only, True - read/write
     in_layer = in_ds.GetLayer(0)
     in_lydefn = in_layer.GetLayerDefn()
@@ -124,11 +127,11 @@ def CreatSetPoint(ListDataset ,inshp ,outshp):
         # print(fd['name'],fd['width'],fd['decimal'])
         layer.CreateField(field)
 
-    print(time.time( ) -time_start)
+    print(time.time() - time_start)
     OutList = []
     Outgeomlist = []
-    for i ,it in enumerate(ListDataset):
-        for j ,item in enumerate(reclist):
+    for i, it in enumerate(ListDataset):
+        for j, item in enumerate(reclist):
             if int(item['gpstim']) in it:
                 item["label"] = i
                 OutList.append(item)
@@ -147,7 +150,8 @@ def CreatSetPoint(ListDataset ,inshp ,outshp):
     # close
     ds.Destroy()
 
-def Getheading(inshp ,outshp):
+
+def Getheading(inshp, outshp):
     in_ds = ogr.Open(inshp, False)  # False - read only, True - read/write
     in_layer = in_ds.GetLayer(0)
     in_lydefn = in_layer.GetLayerDefn()
@@ -162,26 +166,25 @@ def Getheading(inshp ,outshp):
     feature = in_layer.GetNextFeature()
     while feature is not None:
         gpstim = feature.GetField('tim')
-        heading =  feature.GetField('heading')
+        heading = feature.GetField('heading')
         reclist[gpstim] = heading
         feature = in_layer.GetNextFeature()
     in_ds.Destroy()
 
-    out_ds = ogr.Open(outshp ,True)  # False - read only, True - read/write
+    out_ds = ogr.Open(outshp, True)  # False - read only, True - read/write
     out_layer = out_ds.GetLayer(0)
     out_lydefn = out_layer.GetLayerDefn()
     field = ogr.FieldDefn('heading', ogr.OFTReal)
     field.SetWidth(18)
     field.SetPrecision(11)
 
-    print(out_lydefn.GetFieldIndex('heading') )
+    print(out_lydefn.GetFieldIndex('heading'))
     if out_lydefn.GetFieldIndex('heading') == -1:
         out_layer.CreateField(field)
 
-
     feature = out_layer.GetNextFeature()
     while feature is not None:
-        gpstim =feature.GetField('gpstim')
+        gpstim = feature.GetField('gpstim')
         heading = reclist[gpstim]
         print(heading)
         feature.SetField('heading', heading)
@@ -190,6 +193,7 @@ def Getheading(inshp ,outshp):
         feature = out_layer.GetNextFeature()
 
     out_ds.Destroy()
+
 
 # 读入点簇，根据label的分类，将每个点簇生成一个矩形
 def CreatRect(inshp, outshp):
@@ -281,6 +285,8 @@ def CreatRect(inshp, outshp):
 
 """按时间点 合并道路类型   roll up on type"""
 """只有三类完全不相关 左转 右转 直行 掉头 最优可4个字节表达   先使用四个开关实现"""
+
+
 def typediv(typelist):  # 根据type 将数据整合
     div = {"l": 0, "r": 0, "s": 0, "t": 0}
     dir_arr = np.array([0, 0, 0, 0])
@@ -341,27 +347,28 @@ def typediv(typelist):  # 根据type 将数据整合
 
     return div, dir_arr
 
+
 class SHAPE:
-    #读ArcGIS Shape文件
+    # 读ArcGIS Shape文件
     def read_shp(self, filename):
-        ds = ogr.Open(filename, False)  #代开Shape文件（False - read only, True - read/write）
-        layer = ds.GetLayer(0)   #获取图层
+        ds = ogr.Open(filename, False)  # 代开Shape文件（False - read only, True - read/write）
+        layer = ds.GetLayer(0)  # 获取图层
         # layer = ds.GetLayerByName(filename[-4:])
 
-        spatialref = layer.GetSpatialRef() #投影信息
-        lydefn = layer.GetLayerDefn() #图层定义信息
+        spatialref = layer.GetSpatialRef()  # 投影信息
+        lydefn = layer.GetLayerDefn()  # 图层定义信息
 
-        geomtype = lydefn.GetGeomType() #几何对象类型（ogr.wkbPoint, ogr.wkbLineString, ogr.wkbPolygon）
+        geomtype = lydefn.GetGeomType()  # 几何对象类型（ogr.wkbPoint, ogr.wkbLineString, ogr.wkbPolygon）
 
-        fieldlist = [] #字段列表 （字段类型，ogr.OFTInteger, ogr.OFTReal, ogr.OFTString, ogr.OFTDateTime）
+        fieldlist = []  # 字段列表 （字段类型，ogr.OFTInteger, ogr.OFTReal, ogr.OFTString, ogr.OFTDateTime）
         for i in range(lydefn.GetFieldCount()):
             fddefn = lydefn.GetFieldDefn(i)
-            fddict = {'name':fddefn.GetName(),'type':fddefn.GetType(),
-                      'width':fddefn.GetWidth(),'decimal':fddefn.GetPrecision()}
+            fddict = {'name': fddefn.GetName(), 'type': fddefn.GetType(),
+                      'width': fddefn.GetWidth(), 'decimal': fddefn.GetPrecision()}
             fieldlist += [fddict]
 
-        geomlist, reclist = [], [] #SF数据记录 – 几何对象及其对应属性
-        feature = layer.GetNextFeature() #获得第一个SF，横着是一条feature
+        geomlist, reclist = [], []  # SF数据记录 – 几何对象及其对应属性
+        feature = layer.GetNextFeature()  # 获得第一个SF，横着是一条feature
         while feature is not None:
             geom = feature.GetGeometryRef()
             geomlist += [geom.ExportToWkt()]
@@ -373,8 +380,7 @@ class SHAPE:
 
         ds.Destroy()  # 关闭数据源
 
-        return spatialref,geomtype,geomlist,fieldlist,reclist
-
+        return spatialref, geomtype, geomlist, fieldlist, reclist
 
     # 写ArcGIS Shape文件
     def write_shp(self, filename, spatialref, geomtype, geomlist, fieldlist, reclist):
@@ -405,6 +411,7 @@ class SHAPE:
             layer.CreateFeature(feat)  # 将SF写入图层
 
         ds.Destroy()  # 关闭文件
+
 
 # 道路交叉口类，用于进行整体的数据处理封装
 class Road_Intersection:
@@ -454,13 +461,11 @@ class Road_Intersection:
             pass
             # print('no intersection')
 
-
-
-
     def Generate_copywrite(self):
         for t in self.tag:
             print(f'copyright:{chr(t[0])}{chr(t[1])}{chr(t[2])}-->{time.asctime(time.localtime(time.time()))}')
             # print(f'copyright:{time.time()}')
+
 
 def Parse_Model(RI, Point_Cluster):
     # 读取点簇数据，生成RoadIntersection对象
@@ -475,13 +480,12 @@ def Parse_Model(RI, Point_Cluster):
     # print(type(Label[0]))
     classes = len(set(Label))
 
-
     classification = []
     # 每个 i 为一类
     for i in tqdm(range(classes), desc='判断每个点簇的归属'):
         # this_class_Point_Class = np.where(DataArray[:, 0]==i)
-        this_class_Point_Class = [field for field in reclist if field['label'] == i]   # 同属于第i簇的点拿出来组成this_class
-                                                                                       # 包含的信息是 gpstim, lon, lat
+        this_class_Point_Class = [field for field in reclist if field['label'] == i]  # 同属于第i簇的点拿出来组成this_class
+        # 包含的信息是 gpstim, lon, lat
         gpstime = []
         Lat = []
         Lon = []
@@ -547,6 +551,7 @@ def Parse_Model(RI, Point_Cluster):
 
     return final_intersection_arr[4:, :].reshape(46, 4, 4)
 
+
 def Read_Road_Intersection(path_RI):
     Road_I = SHAPE()
     spatialref, geomtype, geomlist, fieldlist, reclist = Road_I.read_shp(path_RI)
@@ -564,6 +569,7 @@ def Read_Road_Intersection(path_RI):
 
     return list_RI, intersec_arr
 
+
 '''
 #############################################################################################################
 ###########################################========--可视化--========################################
@@ -578,19 +584,22 @@ def Read_Road_Intersection(path_RI):
 import turtle as t
 import numpy as np
 from PIL import Image
-#input:数组，4行5列，每行依次对应右、上、左、下方向，任意一行的每列依次为(0/1)：道路是否存在/角度，
+
+
+# input:数组，4行5列，每行依次对应右、上、左、下方向，任意一行的每列依次为(0/1)：道路是否存在/角度，
 # 是否调头，是否左转，是否直行，是否右转
 
-def DrawRoadSection(Dataarray,outdir,name):
+def DrawRoadSection(Dataarray, outdir, name):
     width = 300
+
     def DrawRoad(angle):
         t.tracer(False)
         t.penup()
         t.goto(0, 0)
         t.seth(angle)
-        t.fd(width/2)
+        t.fd(width / 2)
         t.right(90)
-        t.fd(width/2)
+        t.fd(width / 2)
         t.left(90)
         t.pd()
         t.fd(length)
@@ -601,35 +610,37 @@ def DrawRoadSection(Dataarray,outdir,name):
         t.pd()
         t.fd(length)
         t.penup()
+
     def Drawline(angle):
         t.tracer(False)
         t.penup()
         t.goto(0, 0)
         t.seth(angle)
-        t.fd(width/2)
+        t.fd(width / 2)
         t.right(90)
-        t.fd(width/2)
+        t.fd(width / 2)
         t.left(180)
         t.pd()
         t.fd(width)
         t.penup()
-    #右转
-    def GoRight(a,b):
-    #依据路口设置颜色
+
+    # 右转
+    def GoRight(a, b):
+        # 依据路口设置颜色
         if a == 0:
-          t.color("white","red")
+            t.color("white", "red")
         elif a == 1:
-          t.color("white","yellow")
+            t.color("white", "yellow")
         elif a == 2:
-          t.color("white","blue")
+            t.color("white", "blue")
         elif a == 3:
-          t.color("white","green")
+            t.color("white", "green")
         t.pensize(2)
         # 设置起点为矩形边框左上角
         t.penup()
         t.forward(118)
         t.lt(90)
-        t.fd(b/6)
+        t.fd(b / 6)
         # 绘制箭头
         t.pendown()
         t.begin_fill()
@@ -650,27 +661,29 @@ def DrawRoadSection(Dataarray,outdir,name):
         t.end_fill()
         # 返回矩形左上角
         t.penup()
-        t.fd(b/5)
+        t.fd(b / 5)
         t.rt(90)
         t.fd(120)
         t.rt(90)
-        #t.exitonclick()
-    #直行
-    def GoStraight(a,b):
-    #依据路口设置颜色
+
+    # t.exitonclick()
+
+    # 直行
+    def GoStraight(a, b):
+        # 依据路口设置颜色
         if a == 0:
-          t.color("white","red")
+            t.color("white", "red")
         elif a == 1:
-          t.color("white","yellow")
+            t.color("white", "yellow")
         elif a == 2:
-          t.color("white","blue")
+            t.color("white", "blue")
         elif a == 3:
-          t.color("white","green")
-    # 设置起点为矩形边框左上角
+            t.color("white", "green")
+        # 设置起点为矩形边框左上角
         t.penup()
         t.forward(140)
         t.lt(90)
-        t.fd(b/3)
+        t.fd(b / 3)
         # 绘制箭头
         t.pendown()
         t.begin_fill()
@@ -691,30 +704,31 @@ def DrawRoadSection(Dataarray,outdir,name):
         t.rt(90)
         t.forward(30)
         t.end_fill()
-    # 返回矩形左上角
+        # 返回矩形左上角
         t.penup()
         t.rt(90)
-        t.fd(b/3)
+        t.fd(b / 3)
         t.rt(90)
         t.fd(150)
         t.rt(90)
-    #左转
-    def GoLeft(a,b):
-    # 依据路口设置颜色
+
+    # 左转
+    def GoLeft(a, b):
+        # 依据路口设置颜色
         if a == 0:
-            t.color("white","red")
+            t.color("white", "red")
         elif a == 1:
-            t.color("white","yellow")
+            t.color("white", "yellow")
         elif a == 2:
-            t.color("white","blue")
+            t.color("white", "blue")
         elif a == 3:
-            t.color("white","green")
+            t.color("white", "green")
         t.pensize(2)
         # 设置起点为矩形边框左上角
         t.penup()
         t.forward(134)
         t.lt(90)
-        t.fd(4*b/5)
+        t.fd(4 * b / 5)
         # 绘制箭头
         t.pendown()
         t.begin_fill()
@@ -736,29 +750,31 @@ def DrawRoadSection(Dataarray,outdir,name):
         # 返回矩形左上角
         t.penup()
         t.lt(180)
-        t.fd(4*b/5)
+        t.fd(4 * b / 5)
         t.rt(90)
         t.fd(120)
         t.rt(90)
-        #t.exitonclick()
-    #掉头
-    def GoBack(a,b):
-    # 依据路口设置颜色
+
+    # t.exitonclick()
+
+    # 掉头
+    def GoBack(a, b):
+        # 依据路口设置颜色
         if a == 0:
-            t.color("white","red")
+            t.color("white", "red")
         elif a == 1:
-            t.color("white","yellow")
+            t.color("white", "yellow")
         elif a == 2:
-            t.color("white","blue")
+            t.color("white", "blue")
         elif a == 3:
-            t.color("white","green")
+            t.color("white", "green")
         t.pensize(2)
-    #设置起点为矩形边框左上角
+        # 设置起点为矩形边框左上角
         t.penup()
         t.forward(142)
         t.lt(90)
-        t.fd(b/6)
-    #绘制箭头
+        t.fd(b / 6)
+        # 绘制箭头
         t.pendown()
         t.begin_fill()
         t.lt(90)
@@ -782,9 +798,9 @@ def DrawRoadSection(Dataarray,outdir,name):
         t.rt(90)
         t.fd(7)
         t.end_fill()
-    #返回矩形左上角
+        # 返回矩形左上角
         t.penup()
-        t.fd(b/3)
+        t.fd(b / 3)
         t.rt(90)
         t.fd(142)
         t.rt(90)
@@ -864,15 +880,16 @@ def DrawRoadSection(Dataarray,outdir,name):
     # t.exitonclick()
     ts = t.getscreen()
 
-    if not os.path.exists(outdir):os.makedirs(outdir)
-    ts.getcanvas().postscript(file=os.path.join(outdir,name+".eps"))
-    im = Image.open(os.path.join(outdir,name+".eps"))
-    im.save(os.path.join(outdir,name+".png"))
+    if not os.path.exists(outdir): os.makedirs(outdir)
+    ts.getcanvas().postscript(file=os.path.join(outdir, name + ".eps"))
+    im = Image.open(os.path.join(outdir, name + ".eps"))
+    im.save(os.path.join(outdir, name + ".png"))
     t.clear()
 
 
 import folium
 import folium.plugins as plugins
+
 
 def draw_on_map(df, sav_path):
     # sav_path = "t.html"

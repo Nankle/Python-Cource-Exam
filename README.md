@@ -79,10 +79,8 @@ numpy、OSGEO、Matplotlib、tqdm<br>
 
 ## Task assignment：<br>
  **张天巍** :<br>
-  1.获取邻接道路交叉口点<br>
-  2.数据解析表格<br>
-  3.矢量数据可视化  `Done` **utils.SHAPE class** <br> 
-  4.编写md文档
+  1. **STEP**2 3 4 5<br>
+  2. Make Repository
 
  **陈德跃** :<br>
 

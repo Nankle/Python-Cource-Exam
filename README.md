@@ -32,7 +32,7 @@ config: configration of project<br>
 
 ### Installation<br>
 `git clone https://github.com/Nankle/Python-Cource-Exam` <br>
-    completed by Nankle Ztw
+    completed by Nankle Ztw<br>
 **Requirements：**<br>
 numpy、OSGEO、Matplotlib、tqdm<br>
 

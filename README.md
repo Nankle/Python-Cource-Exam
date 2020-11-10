@@ -66,14 +66,15 @@ numpy、OSGEO、Matplotlib、tqdm<br>
 ·RI.Generate_Point_Cluster(Point_Cluster_Part) #点簇分离归并函数<br>
 ·RI.Generate_Drive_type() #提取并生成每个路口的行驶规则<br>
 ```
-每个道路交叉口对象该函数的返回值为：<br>
-List: Grive_Principle(str):<br>
-**[RIID Lon Lat CW1 CW2 CW3 CW4]CWn='0011' 左转 右转 直行 掉头， 0代表允许，1代表禁止**
+    每个道路交叉口对象该函数的返回值为：<br>
+    List: Grive_Principle(str):<br>
+    **[RIID Lon Lat CW1 CW2 CW3 CW4]CWn='0011' 左转 右转 直行 掉头， 0代表允许，1代表禁止**
 
-5. 数据可视化
+
+6. 数据可视化
 对生成的道路行驶规则与道路交叉口数据进行可视化展示，具体想怎么做可以自行发挥
 
-6. 文档整理编写
+7. 文档整理编写
 
 
 ## Task assignment：<br>

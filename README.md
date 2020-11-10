@@ -20,31 +20,35 @@ config: configration of project<br>
   `But`
   
 · 虽然采集了道路出现所有出现转线标线的位置与所有的道路路口，但无法进行道路的路口和转向标线的对应，因此无法准确获得每一个路口的转向信息。<br>
-  
-### Plan A 
 
-
-### 讨论
-
+### Installation<br>
+`git clone https://github.com/Nankle/Python-Cource-Exam` <br>
+completed by Nankle Ztw
 
 ## Methods<br>
  `Confirmed`<br>
 
->  通过对采集点数据进行时序聚类，生成以连续采集时间段为划分的实验对象，创建路口类，通过一系列操作提取路口的行驶规则，具体步骤如下：<br>
+> 整体思路：通过对采集点数据进行时序聚类，生成以连续采集时间段为划分的处理对象，即**点簇**<br>
+> 创建路口类`Road_Intersection`，将每一个路口视为一个待处理对象<br>
+> 通过`Parse_Model()`函数，按照规则将点簇归并其所属路口类<br>
+> 使用路口类成员函数，提取路口的行驶规则，具体步骤如下：<br>
+
+
 1. 生成以连续时间段为划分的点簇数据，由**20201006_carvideo_orig.shp**中获取，数据组织格式：<br>
-List->Point_Cluster: dtype : Str [PointID, CLuster_ID, Lon, Lat, Type, GPSTime]<br>
+`List->Point_Cluster: dtype : Str [PointID, CLuster_ID, Lon, Lat, Type, GPSTime]`<br>
 
 2. 建立Road_Intersection类<br>
+读取路口数据生成Object<br>
 
 3. 读取**traffic_intersection_zhongguancun.shp**文件，将每一个道路交叉口生成为一个Road_Intersection类的对象，
 构造参数为该交叉口的经纬度。将所有的交叉口对象保存到一个List:RI中。<br>
 
 4. 编写函数**Parse_Model(RI, Point_Cluster)**，目标：解析出属于 每一个道路交叉口对象 的 点簇(PC，Point_Cluster)有哪些,对每一个道路交叉口对象调用<br>
-`**RI.Generate_Point_Cluster(Point_Cluster_Part)**`<br>
-成员函数,从而完成归类，即RI.P_Cluster属性，为一个List<br>
+`RI.Generate_Point_Cluster(Point_Cluster_Part)`<br>
+成员函数,从而完成归类，即`RI.P_Cluster`属性，为一个List<br>
 算法实现思路：通过判断每个点簇中点的GPSTime先后顺序，判断处于时间序列最后的那个点距离哪个道路交叉口最近，并判断是否为驶入该交叉口，通过截断Point_Cluster链表来对每个道路交叉口赋值.<br>
 
----------------------------------------------<br>
+------------------------------------------------------------------------------------------------<br>
 
 5. 类的成员函数编写：<br>
 ```python
@@ -66,7 +70,7 @@ List: Grive_Principle(str):<br>
   1.获取邻接道路交叉口点<br>
   2.数据解析表格<br>
 
-  | File Name                 | 文件描述                                      | 主要字段与含义 |
+  | File Name                 | 文件描述                                     | 主要字段与含义 |
   | :----:                    | :----:                                      | :----: |
   |20201006_carvideo_orig.shp | 行车记录仪采样数据，包含采集到的路边标线类型，观测点 | GPSTime 、Type（11种)|
   |road_zhongguancun.shp      | 道路线目标矢量文件                             | None |
@@ -75,6 +79,7 @@ List: Grive_Principle(str):<br>
   |zhongguancun.jpg| 实验区航空影像 |None|None|
 
   3.矢量数据可视化  `Done` **utils.SHAPE class** <br> 
+  4.编写md文档
 
  **陈德跃** :<br>
 

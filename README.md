@@ -40,7 +40,7 @@ List->Point_Cluster: dtype : Str [PointID, CLuster_ID, Lon, Lat, Type, GPSTime]<
 构造参数为该交叉口的经纬度。将所有的交叉口对象保存到一个List:RI中。<br>
 
 4. 编写函数**Parse_Model(RI, Point_Cluster)**，目标：解析出属于 每一个道路交叉口对象 的 点簇(PC，Point_Cluster)有哪些,对每一个道路交叉口对象调用<br>
-**RI.Generate_Point_Cluster(Point_Cluster_Part)**<br>
+`**RI.Generate_Point_Cluster(Point_Cluster_Part)**`<br>
 成员函数,从而完成归类，即RI.P_Cluster属性，为一个List<br>
 算法实现思路：通过判断每个点簇中点的GPSTime先后顺序，判断处于时间序列最后的那个点距离哪个道路交叉口最近，并判断是否为驶入该交叉口，通过截断Point_Cluster链表来对每个道路交叉口赋值.<br>
 
@@ -66,10 +66,10 @@ List: Grive_Principle(str):<br>
   1.获取邻接道路交叉口点<br>
   2.数据解析表格<br>
 
-  | File Name | 文件描述 | 主要字段与含义 |
-  | :----:| :----: | :----: |
-  |20201006_carvideo_orig.shp | 行车记录仪采样数据，包含采集到的路边标线类型，观测点|GPSTime 、Type（11种)|
-  |road_zhongguancun.shp | 道路线目标矢量文件 | None |
+  | File Name                 | 文件描述                                      | 主要字段与含义 |
+  | :----:                    | :----:                                      | :----: |
+  |20201006_carvideo_orig.shp | 行车记录仪采样数据，包含采集到的路边标线类型，观测点 | GPSTime 、Type（11种)|
+  |road_zhongguancun.shp      | 道路线目标矢量文件                             | None |
   |tracking_points_heading.shp| 行车轨迹点数据，包含时间，位置，和行驶朝向 | Time、经纬度、Heading|
   |traffic_intersection_zhongguancun.shp|道路交叉口点数据| 道路交叉口位置点数据 | |
   |zhongguancun.jpg| 实验区航空影像 |None|None|

@@ -84,7 +84,7 @@ info：对生成的道路行驶规则与道路交叉口数据进行可视化展�
 EpsPic="p"+str(seq)+".eps" #文件名，例：p1.eps<br>
 ts=t.getscreen()<br>
 ts.getcanvas().postscript(file=EpsPic)<br>
-```
+```<br>
 ```python
 #将.eps图片转换为.png<br>
 #由于JPEG是有损压缩，会导致生成的图片清晰度较低，因此不保存为.jpg格式，而是.png格式<br>
@@ -92,7 +92,7 @@ JpgPic1 = "p"+str(seq)+".png" #文件名，例：p1.png<br>
 im = Image.open(EpsPic)<br>
 im.load(scale=5)<br>
 im.save(JpgPic1,"PNG",quality=95) #quality参数：保存图像的质量，范围从1-95，尽量避免设置高于95的值，若使用默认参数会导致结果图片被压缩<br>
-```
+```<br>
 ```python
 #缩小图片到合适尺寸<br>
 JpgPic2=str(seq)+".png" #文件名，例：1.png<br>

@@ -17,6 +17,7 @@ data  : 原始数据<br>
   |tracking_points_heading.shp| 行车轨迹点数据，包含时间，位置，和行驶朝向 | Time、经纬度、Heading|
   |traffic_intersection_zhongguancun.shp|道路交叉口点数据| 道路交叉口位置点数据 | |
   |zhongguancun.jpg| 实验区航空影像 |None|None|
+
 说明：我们为traffic_intersection_zhongguancun增加了经纬度字段Lon、Lat，为20201006_carvideo_orig增加了Heading字段，由tracking_points_heading文件中获取。<br>
 
 config: 配置文件，待更新<br>
@@ -170,11 +171,11 @@ out.save(JpgPic2, "PNG", quality=100)
 ### 4.1 结果展示
 
 1. 按照时间序列生成点簇<br>
-将所有的点按照时间顺序排列如下图，GPS Time持续时间一共5596s，(一维展开不便显示，将数据折叠成70x80)，可以看到其中的数据都呈现段状的不连续分布，根据这一点将所有的点归类到点簇与孤立点两种。其中跨度5596s的时间内共有28295个点，其中28039个点被归类到不同的点簇中，生成了308个点簇，另有256个时间上孤立的点.<br>
-**生成后进行检核：**对每个点簇生成矩形对时间聚类的结果进行检验，经验证，归类结果没有跨越路口的情况发生，认定方案成立。<br>
+>  将所有的点按照时间顺序排列如下图，GPS Time持续时间一共5596s，(一维展开不便显示，将数据折叠成70x80)，可以看到其中的数据都呈现段状的不连续分布，根据这一点将所有的点归类到点簇与孤立点两种。其中跨度5596s的时间内共有28295个点，其中28039个点被归类到不同的点簇中，生成了308个点簇，另有256个时间上孤立的点.<br>
+>  **生成后进行检核：**对每个点簇生成矩形对时间聚类的结果进行检验，经验证，归类结果没有跨越路口的情况发生，认定方案成立。<br>
 ![时空聚类点簇]()
 
-2. 网络地图可视化
+2. 网络地图可视化<br>
 ![整体示意图](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC.png)<br>
 ![路口规则示意图合集](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC1.png)<br>
 

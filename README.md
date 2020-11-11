@@ -35,7 +35,8 @@ config: configration of project<br>
 
 
 **Requirements：**<br>
-numpy、OSGEO、Matplotlib、tqdm<br>
+Python library：numpy、OSGEO、Matplotlib、tqdm、turtle、PIL<br>
+Software：Ghostscript<br>
 
 ## Methods<br>
  `Confirmed`<br>
@@ -74,7 +75,31 @@ numpy、OSGEO、Matplotlib、tqdm<br>
 
 6. 数据可视化
 info：对生成的道路行驶规则与道路交叉口数据进行可视化展示<br>
-
+（1）<br>
+<br>
+（2）turtle绘图结果保存、图片格式转换及大小改变<br>
+```python
+#将turtle绘图结果保存为当前文件夹下的.eps文件
+#用postscript生成图片时，对于.jpg格式，即使生成图片，也因为JPEG标识符段长度太短，导致文件不完整无法打开，故保存为.eps格式，作为中间结果
+EpsPic="p"+str(seq)+".eps" #文件名，例：p1.eps
+ts=t.getscreen()
+ts.getcanvas().postscript(file=EpsPic) 
+```
+```python
+#将.eps图片转换为.png
+#由于JPEG是有损压缩，会导致生成的图片清晰度较低，因此不保存为.jpg格式，而是.png格式
+JpgPic1 = "p"+str(seq)+".png" #文件名，例：p1.png
+im = Image.open(EpsPic)
+im.load(scale=5)
+im.save(JpgPic1,"PNG",quality=95) #quality参数：保存图像的质量，范围从1-95，尽量避免设置高于95的值，若使用默认参数会导致结果图片被压缩
+```
+```python
+#缩小图片到合适尺寸
+JpgPic2=str(seq)+".png" #文件名，例：1.png
+im=Image.open(JpgPic1)
+out=im.resize((300,300),PIL.Image.ANTIALIAS) #缩小图片，设置重采样方法为ANTIALIAS，以保证缩小后的图片有较高的分辨率
+out.save(JpgPic2, "PNG", quality=100)
+```
 7. 文档整理编写
 
 
@@ -107,3 +132,7 @@ Scikit-Learn : https://scikit-learn.org/stable/index.html<br>
 [How to pull requst to updata ur own code](https://www.jianshu.com/p/ebad936fac4d)<br>
 [Frequently-used command in github](https://blog.csdn.net/wjh2622075127/article/details/87900006?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-87900006.nonecase&utm_term=github%20pull%20%E5%91%BD%E4%BB%A4&spm=1000.2123.3001.4430)<br>
 [bad mf](https://blog.csdn.net/qq_31796651/article/details/80803599?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~first_rank_v2~rank_v25-3-80803599.nonecase&utm_term=github%E4%B8%AD%E7%9A%84readme%E6%B7%BB%E5%8A%A0%E8%A1%A8%E6%A0%BC&spm=1000.2123.3001.4430)<br>
+https://blog.csdn.net/qq_36808245/article/details/89085018<br>
+https://www.osgeo.cn/pillow/handbook/image-file-formats.html#eps<br>
+https://blog.csdn.net/weixin_41935140/article/details/83308359<br>
+https://blog.csdn.net/qingyuanluofeng/article/details/50483812?utm_medium=distribute.pc_relevant.none-task-blog-title-7&spm=1001.2101.3001.4242<br>

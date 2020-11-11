@@ -153,18 +153,28 @@ out.save(JpgPic2, "PNG", quality=100)
 
  **张天巍** :<br>
   1. **STEP**2 3 4 5<br>
-  2. Make Repository and 
+  2. Make Repository<br>
+  3. Complete ReadMe<br>
+  @[NankleZTW](https://github.com/Nankle)
 
  **陈德跃** :<br>
+  1. **STEP**1<br>
+    1、处理地面标志点。将地面标志点划分点簇，获取连续的点簇片段。
+    2、对点簇片段进行判断，获取每个点簇归属的十字路口点。
+    3、判断十字路口的来车方向以及转向规则。
+  2. 矢量数据可视化<br>
 
  **翟富祥** :<br>
+  1. **STEP**5<br>
+  2. 文档、参考资料整理<br>
 
  **邹玮杰** :<br>
  以H5的形式将路口通行结果用可交互的方式添加到地图上<br>
 
  **陶诗语 && 罗佩弦** :<br>
-``数据结果可视化``<br>
+**数据结果可视化**<br>
 罗佩弦: 路口绘制、画箭头函数的调用、图片保存、格式转换<br>
+陶诗语: `utils/createpicturenew.py`<br>
 
 
 ## 4 Results
@@ -201,3 +211,4 @@ Scikit-Learn : https://scikit-learn.org/stable/index.html<br>
 [visualization3](https://blog.csdn.net/weixin_41935140/article/details/83308359)<br>
 [visualization4](https://blog.csdn.net/qingyuanluofeng/article/details/50483812?utm_medium=distribute.pc_relevant.)<br>
 [visualization5](none-task-blog-title-7&spm=1001.2101.3001.4242)<br>
+

@@ -3,7 +3,7 @@
 
  == Let's do it
  
- ![Data Vision](https://github.com/Nankle/Python-Cource-Exam/blob/main/%E6%95%B0%E6%8D%AE%E5%BF%AB%E8%A7%86%E5%9B%BE.png)
+![最终结果展示](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/6.jpg)
  
 
 ## 1 Introduction<br>
@@ -152,20 +152,18 @@ out.save(JpgPic2, "PNG", quality=100)
 ## 3 Task assignment：<br>
 
  **张天巍** :<br>
-  1. **STEP**2 3 4 5<br>
+  1. **[Method](https://github.com/Nankle/Python-Cource-Exam#2-methods)** 2 3 4 5<br>
   2. Make Repository<br>
   3. Complete ReadMe<br>
   @[NankleZTW](https://github.com/Nankle)
 
  **陈德跃** :<br>
-  1. **STEP**1<br>
-    1、处理地面标志点。将地面标志点划分点簇，获取连续的点簇片段。
-    2、对点簇片段进行判断，获取每个点簇归属的十字路口点。
-    3、判断十字路口的来车方向以及转向规则。
+  1. **[Method](https://github.com/Nankle/Python-Cource-Exam#2-methods)** 1<br>
+    处理地面标志点。将地面标志点划分点簇，获取连续的点簇片段。<br>
   2. 矢量数据可视化<br>
 
  **翟富祥** :<br>
-  1. **STEP**5<br>
+  1. **[Method](https://github.com/Nankle/Python-Cource-Exam#2-methods)** 5<br>
   2. 文档、参考资料整理<br>
 
  **邹玮杰** :<br>
@@ -184,18 +182,18 @@ out.save(JpgPic2, "PNG", quality=100)
 1. 按照时间序列生成点簇<br>
 
 ---将所有的点按照时间顺序排列如下图，GPS Time持续时间一共5596s，(一维展开不便显示，将数据折叠成70x80)，可以看到其中的数据都呈现段状的不连续分布，根据这一点将所有的点归类到点簇与孤立点两种。其中跨度5596s的时间内共有28295个点，其中28039个点被归类到不同的点簇中，生成了308个点簇，另有256个时间上孤立的点.<br>
----**生成后进行检核：**对每个点簇生成矩形对时间聚类的结果进行检验，经验证，归类结果没有跨越路口的情况发生，认定方案成立。<br>
+---生成后进行**检核**：对每个点簇生成矩形对时间聚类的结果进行检验，经验证，归类结果没有跨越路口的情况发生，认定方案成立。<br>
 
 
 ![时空聚类点簇](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/%E7%82%B9%E7%B0%87%E7%A4%BA%E6%84%8F%E5%9B%BE.png)<br>
 
 
 2. 网络地图可视化<br>
-![整体示意图](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC.png)![路口规则示意图合集](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC1.png)<br>
+![整体示意图](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC.png)
 
 
 3. 矢量输出结果展示<br>
-[矢量输出结果展示，可在Arcgis中打开](https://github.com/Nankle/Python-Cource-Exam/blob/main/visual.md)
+[矢量输出结果展示，可在Arcgis中打开](https://github.com/Nankle/Python-Cource-Exam/blob/main/visual.md)<br>
 @https://github.com/Chendeyue<br>
 
  

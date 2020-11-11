@@ -75,9 +75,9 @@ Software：Ghostscript<br>
 
 6. 数据可视化
 info：对生成的道路行驶规则与道路交叉口数据进行可视化展示<br>
-（1）<br>
+>（1）<br>
 <br>
-（2）turtle绘图结果保存、图片格式转换及图片缩小<br>
+>（2）turtle绘图结果保存、图片格式转换及图片缩小<br>
 
 ```python
 #将turtle绘图结果保存为当前文件夹下的.eps文件
@@ -88,7 +88,7 @@ ts.getcanvas().postscript(file=EpsPic)
 ```
 
 ```python
-#将.eps图片转换为.png
+#将.eps格式图片转换为.png格式图片
 #由于JPEG是有损压缩，会导致生成的图片清晰度较低，因此不保存为.jpg格式，而是.png格式
 JpgPic1 = "p"+str(seq)+".png" #文件名，例：p1.png
 im = Image.open(EpsPic)

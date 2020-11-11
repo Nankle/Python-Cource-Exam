@@ -5,31 +5,6 @@
  
  ![Data Vision](https://github.com/Nankle/Python-Cource-Exam/blob/main/%E6%95%B0%E6%8D%AE%E5%BF%AB%E8%A7%86%E5%9B%BE.png)
  
-## Explanation of project folders: 
- 
-utils : 支持该项目的功能函数包集合<br>
-data  : 原始数据<br>
-
-  | File Name                 | Description                                     | Meanings |
-  | :----:                    | :----:                                      | :----: |
-  |20201006_carvideo_orig.shp | 行车记录仪采样数据，包含采集到的路边标线类型，观测点 | GPSTime 、Type:11种|
-  |road_zhongguancun.shp      | 道路线目标矢量文件                             | None |
-  |tracking_points_heading.shp| 行车轨迹点数据，包含时间，位置，和行驶朝向 | Time、经纬度、Heading|
-  |traffic_intersection_zhongguancun.shp|道路交叉口点数据| 道路交叉口位置点数据 | |
-  |zhongguancun.jpg| 实验区航空影像 |None|None|
-
-说明：我们为traffic_intersection_zhongguancun增加了经纬度字段Lon、Lat，为20201006_carvideo_orig增加了Heading字段，由tracking_points_heading文件中获取。<br>
-
-config: 配置文件，待更新<br>
-OutPut: 中间与最终结果保存<br>
-| File Name        |    Meanings     |
-| :----:           |    :----:       |
-|Visual1.shp       | 生成的行驶规则矢量方向图 |
-|RoadInsection.txt |  路口行驶规则      |
-|ClusterPoint      | 聚类点簇          ｜
-
-OutPhoto：网络地图可视化源文件<br>
-
 
 ## 1 Introduction<br>
 
@@ -54,7 +29,7 @@ if you want to run your own data:<br>
 `python main.py`<br>
 
 
-**1.3 Requirements：**<br>
+### 1.3 Requirements：<br>
 numpy<br>
 OSGEO<br>
 Matplotlib<br>
@@ -63,6 +38,32 @@ turtle<br>
 PIL<br>
 Software：Ghostscript<br>
 folium<br>
+
+
+### 1.4 Explanation of project folders: 
+ 
+utils : 支持该项目的功能函数包集合<br>
+data  : 原始数据<br>
+
+  | File Name                 | Description                                     | Meanings |
+  | :----:                    | :----:                                      | :----: |
+  |20201006_carvideo_orig.shp | 行车记录仪采样数据，包含采集到的路边标线类型，观测点 | GPSTime 、Type:11种|
+  |road_zhongguancun.shp      | 道路线目标矢量文件                             | None |
+  |tracking_points_heading.shp| 行车轨迹点数据，包含时间，位置，和行驶朝向 | Time、经纬度、Heading|
+  |traffic_intersection_zhongguancun.shp|道路交叉口点数据| 道路交叉口位置点数据 | |
+  |zhongguancun.jpg| 实验区航空影像 |None|None|
+
+说明：我们为traffic_intersection_zhongguancun增加了经纬度字段Lon、Lat，为20201006_carvideo_orig增加了Heading字段，由tracking_points_heading文件中获取。<br>
+
+config: 配置文件，待更新<br>
+OutPut: 中间与最终结果保存<br>
+| File Name        |    Meanings     |
+| :----:           |    :----:       |
+|Visual1.shp       | 生成的行驶规则矢量方向图 |
+|RoadInsection.txt |  路口行驶规则      |
+|ClusterPoint      | 聚类点簇          ｜
+
+OutPhoto：网络地图可视化源文件<br>
 
 
 ## 2 Methods<br>
@@ -171,13 +172,22 @@ out.save(JpgPic2, "PNG", quality=100)
 ### 4.1 结果展示
 
 1. 按照时间序列生成点簇<br>
->>将所有的点按照时间顺序排列如下图，GPS Time持续时间一共5596s，(一维展开不便显示，将数据折叠成70x80)，可以看到其中的数据都呈现段状的不连续分布，根据这一点将所有的点归类到点簇与孤立点两种。其中跨度5596s的时间内共有28295个点，其中28039个点被归类到不同的点簇中，生成了308个点簇，另有256个时间上孤立的点.<br>
->>**生成后进行检核：**对每个点簇生成矩形对时间聚类的结果进行检验，经验证，归类结果没有跨越路口的情况发生，认定方案成立。<br>
+
+---将所有的点按照时间顺序排列如下图，GPS Time持续时间一共5596s，(一维展开不便显示，将数据折叠成70x80)，可以看到其中的数据都呈现段状的不连续分布，根据这一点将所有的点归类到点簇与孤立点两种。其中跨度5596s的时间内共有28295个点，其中28039个点被归类到不同的点簇中，生成了308个点簇，另有256个时间上孤立的点.<br>
+---**生成后进行检核：**对每个点簇生成矩形对时间聚类的结果进行检验，经验证，归类结果没有跨越路口的情况发生，认定方案成立。<br>
+
+
 ![时空聚类点簇](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/%E7%82%B9%E7%B0%87%E7%A4%BA%E6%84%8F%E5%9B%BE.png)<br>
 
+
 2. 网络地图可视化<br>
-![整体示意图](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC.png)<br>
+![整体示意图](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC.png)
 ![路口规则示意图合集](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC1.png)<br>
+
+
+3. 矢量输出结果展示<br>
+|![1](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/1.png) | ![2](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/2.jpg)| ![3](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/3.jpg) |
+|![4](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/4.jpg) | ![5](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/5.jpg)| ![6](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/6.jpg) |
 
  
 ## 5 Reference

@@ -946,15 +946,20 @@ import folium.plugins as plugins
 def draw_on_map(df, sav_path):
     # sav_path = "t.html"
 
-    World_map = folium.Map(location=[df['lat'].mean(), df['lon'].mean()], zoom_start=15)
-    marker_cluster = plugins.MarkerCluster().add_to(World_map)
-    for index, row in df.iterrows():
-        popup = folium.Popup('<img src="' + row['picturepath'] + '" alt="' + str(index) + '">')
-        folium.Marker([row['lat'], row['lon']], tiles='Stamen Toner', popup=popup).add_to(marker_cluster)
-        # folium.RegularPolygonMarker([row["lat"], row["lon"]], popup="{0}:{1}".format(row["cities"], row["GDP"]),number_of_sides=10,radius=5).add_to(marker_cluster)
+    World_map = folium.Map(location=[df['lat'].mean(), df['lon'].mean()],
+                           zoom_start=15)  # 创建底图，location表示显示地图的中心位置，zoom_start为缩放尺度
+    marker_cluster = plugins.MarkerCluster().add_to(World_map)  # marker_cluster 代表一个图层 之后会将点簇添加到这个图层上   相当于在arcgis里面的图层
+    for index, row in df.iterrows():  # 遍历数据
 
-    World_map.save(sav_path)
-    # display(World_map)
+        popup = folium.Popup('<img src="' + row['picturepath'] + '" alt="' + str(index) + '">')  # 用H5语句创建水滴点的对象
+        folium.Marker([row['lat'], row['lon']], tiles='Stamen Toner', popup=popup).add_to(
+            marker_cluster)  # 将水滴点添加到图层内
+    # folium.RegularPolygonMarker([row["lat"], row["lon"]], popup="{0}:{1}".format(row["cities"], row["GDP"]),number_of_sides=10,radius=5).add_to(marker_cluster)
+
+    World_map.save(sav_path)  # 储存整个项目
+
+    # webbrowser.open(sav_path)  # 用默认浏览器打开路径
+    # display(World_map)#展示这个H5
     return World_map
 
 
@@ -969,7 +974,7 @@ def draw_on_map(df, sav_path):
 '''
 from math import cos,sin,pi
 
-# 绕指定点旋转的旋转函数
+# 绕指定点旋转的旋转函数,瞬时针旋转。
 def RotatePoint(corerate_point, point, angle):
     angle = -angle / 180 * pi
     # print(angle)
@@ -989,13 +994,14 @@ def RotatePoint(corerate_point, point, angle):
 # print(newpoint)
 # exit()
 
+# 旋转一个点列表
 def RotatePointList(corerate_point, pointlist, angle):
     newlist = []
     for point in pointlist:
         newlist.append(RotatePoint(corerate_point, point, angle))
     return np.asarray(newlist)
 
-
+# 绘制一个方向上的规则
 def DrawPoint_Direct(Seat, rule):
     Direct = rule[0]
     if Direct == -1:
@@ -1132,7 +1138,7 @@ def DrawPoint_Direct(Seat, rule):
     return yard
 
 
-def DrawRoadSection(inshp_road, Bigrule, outshp):
+def DrawRoadSection2(inshp_road, Bigrule, outshp):
     in_ds = ogr.Open(inshp_road, False)  # False - read only, True - read/write
     in_layer = in_ds.GetLayer(0)
 

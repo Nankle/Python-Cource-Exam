@@ -54,17 +54,18 @@ if __name__ == '__main__':
 
 
 
-    '''
+
     #读取规则矩阵，生成路口转向图片
     for i,data in enumerate(Final_Result):
-        temp_data = np.zeros((4,5))
-        temp_data[:,0] = np.asarray([0,90,180,270])
-        temp_data[:,1:5] = data
+        # temp_data = np.zeros((4,5))
+        # temp_data[:,0] = np.asarray([0,90,180,270])
+        # temp_data[:,1:5] = data
+        print(data.shape)
 
         Important = False
         for j,item in enumerate(data):
-            if item.sum()<=0:
-                temp_data[j,0] = -1
+            if item[1:].sum()<=0:
+
                 continue
             Important = True
 
@@ -73,7 +74,7 @@ if __name__ == '__main__':
             d = np.zeros((747,633))
             cv2.imwrite(os.path.join(outdir, str(i) + ".png"),d)
             continue
-        DrawRoadSection(temp_data,outdir,str(i))
+        DrawRoadSection(data,outdir,str(i))
 
     sav_path = os.path.join(outdir,'index.html')
     df = [{'lon':item[0],'lat':item[1],'picturepath':os.path.join(outdir, str(i) + ".png")}for i,item in enumerate(intersection)]
@@ -86,7 +87,7 @@ if __name__ == '__main__':
     # df=pd.DataFrame([df])
     draw_on_map(df, sav_path)
     
-    '''
+
 
     ''' 
     #读取规则矩阵，生成路口转向规则shape

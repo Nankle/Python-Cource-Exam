@@ -6,7 +6,7 @@ import sys, math
 import numpy as np
 
 Road_Intersection_Path = \
-    '/Users/yunsheng666/Documents/GitHub/Python-Cource-Exam/data/traffic_intersection_zhongguancun.shp'
+    '../data/traffic_intersection_zhongguancun.shp'
 
 
 class SHAPE:
@@ -144,7 +144,7 @@ def Parse_Model(RI, Point_Cluster):
     # 读取点簇数据，生成RoadIntersection对象
     PC = SHAPE()
     spatialref, geomtype, geomlist, fieldlist, reclist = PC.read_shp(
-        '/Users/yunsheng666/Documents/GitHub/Python-Cource-Exam/OutPut/ClusterPoint.shp')
+        '../OutPut/ClusterPoint.shp')
 
     Label = []
     for i in reclist:
@@ -316,7 +316,7 @@ def typediv(typelist):  # 根据type 将数据整合
 if __name__ == "__main__":
     test = SHAPE()
     spatialref, geomtype, geomlist, fieldlist, reclist = test.read_shp(
-        '/Users/yunsheng666/Documents/GitHub/Python-Cource-Exam/OutPut/ClusterPoint.shp')
+        '../OutPut/ClusterPoint.shp')
 
     RI, intersection = Read_Road_Intersection(Road_Intersection_Path)
     print('交叉口经纬度')     # 每个道路交叉口及其经纬度，共46个
@@ -324,5 +324,9 @@ if __name__ == "__main__":
     Point_Cluster = []
     Final_Result = Parse_Model(RI, Point_Cluster)
     print('交叉口对应的道路方向及其规则')
-    print(Final_Result)     # 46*4*4的矩阵，46代表每个道路交叉口，4*4矩阵中每行代表一个方向(从正北开始顺时针转，四个方向)
+    print(Final_Result.shape)     # 46*4*4的矩阵，46代表每个道路交叉口，4*4矩阵中每行代表一个方向(从正北开始顺时针转，四个方向)
                             # 每列代表是否能通行(依次是左转，右转，直行，拐弯；0代表不能通行，1代表可以通行）
+
+    temp = np.ones((46,4,5))*90
+    temp[:,:,1:] = Final_Result
+    np.savetxt('../OutPut/RoadInsection.txt',temp.reshape(-1,20),fmt='%d')

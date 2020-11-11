@@ -281,6 +281,7 @@ def CreatRect(inshp, outshp):
 #############################################################################################################
 输入：点簇的shp
 输出：规则矩阵
+完成者：张天巍、翟富祥
 '''
 
 """按时间点 合并道路类型   roll up on type"""
@@ -434,24 +435,59 @@ class Road_Intersection:
         list2 = []
         list3 = []
         list4 = []
+        list1_head = []
+        list2_head = []
+        list3_head = []
+        list4_head = []
 
         if len(self.PC) != 0:
             for i in range(len(self.PC)):
+                heading_sum = 0
                 for j in self.PC[i]:
-                    if j['heading'] > 315 or j['heading'] <= 45:
+                    heading_sum = heading_sum + j['heading']
+                heading_mean = heading_sum/(len(self.PC[i]))
+                if heading_mean > 315 or heading_mean <= 45:
+                    for j in self.PC[i]:
                         list1.append(j['type'])
-                    if j['heading'] > 45 and j['heading'] <= 135:
+                        list1_head.append(j['heading'])
+                if heading_mean > 45 and heading_mean <= 135:
+                    for j in self.PC[i]:
                         list2.append(j['type'])
-                    if j['heading'] > 135 and j['heading'] <= 225:
+                        list2_head.append(j['heading'])
+                if heading_mean > 135 and heading_mean <= 225:
+                    for j in self.PC[i]:
                         list3.append(j['type'])
-                    if j['heading'] > 225 and j['heading'] <= 315:
+                        list3_head.append(j['heading'])
+                if heading_mean > 225 and heading_mean <= 315:
+                    for j in self.PC[i]:
                         list4.append(j['type'])
+                        list4_head.append(j['heading'])
+            heading1 = np.asarray(list1_head).mean()
+            heading2 = np.asarray(list2_head).mean()
+            heading3 = np.asarray(list3_head).mean()
+            heading4 = np.asarray(list4_head).mean()
             dict1, arr1 = typediv(list1)
             dict2, arr2 = typediv(list2)
             dict3, arr3 = typediv(list3)
             dict4, arr4 = typediv(list4)
-            self.RI_intersection = np.concatenate((arr1, arr2, arr3, arr4), 0).reshape(-1, 4)
+            tem = np.array([0, 0, 0, 0])
+            if np.array_equal(arr1, tem):
+                heading1 = -1
+            if np.array_equal(arr2, tem):
+                heading2 = -1
+            if np.array_equal(arr3, tem):
+                heading3 = -1
+            if np.array_equal(arr4, tem):
+                heading4 = -1
 
+            heading = np.asarray([heading1, heading2, heading3, heading4])
+            temp = np.concatenate((arr1, arr2, arr3, arr4), 0).reshape(-1, 4)
+
+            other = np.zeros((4, 5))
+            other[:, 1:] = temp
+            other[:, 0] = heading
+
+            self.RI_intersection = other
             # print(dict1, arr1)
             # print(dict2, arr2)
             # print(dict3, arr3)
@@ -460,6 +496,9 @@ class Road_Intersection:
         else:
             pass
             # print('no intersection')
+
+
+
 
     def Generate_copywrite(self):
         for t in self.tag:
@@ -479,13 +518,20 @@ def Parse_Model(RI, Point_Cluster):
 
     # print(type(Label[0]))
     classes = len(set(Label))
+    # print(f'Items Count:{len(reclist)}\nLabels Count:{classes}')
+
+    # DataArray = np.vstack((np.array(Label), np.array(drive_type), np.array(gpstime), \
+    #     np.array(Lat), np.array(Lon))).T
+    # print(DataArray.shape)
+    # print(reclist[0])
+    # print(DataArray[])
 
     classification = []
     # 每个 i 为一类
     for i in tqdm(range(classes), desc='判断每个点簇的归属'):
         # this_class_Point_Class = np.where(DataArray[:, 0]==i)
-        this_class_Point_Class = [field for field in reclist if field['label'] == i]  # 同属于第i簇的点拿出来组成this_class
-        # 包含的信息是 gpstim, lon, lat
+        this_class_Point_Class = [field for field in reclist if field['label'] == i]   # 同属于第i簇的点拿出来组成this_class
+                                                                                       # 包含的信息是 gpstim, lon, lat
         gpstime = []
         Lat = []
         Lon = []
@@ -534,13 +580,14 @@ def Parse_Model(RI, Point_Cluster):
     print( uch , " 对应的字符为", chr(uch))
     '''
     ii = 0
-    final_intersection_arr = np.zeros((4, 4), dtype=np.int)
+    final_intersection_arr = np.zeros((4, 5), dtype=np.int)
     for index, RI_Item in enumerate(RI):
         # print(f'Road_Intersection[{ii}]:')
         RI_Item.Generate_Drive_type()
         if RI_Item.RI_intersection.shape[0] == 0:
-            # tem = index * np.ones((4, 4), dtype=np.int)
-            tem = (-1) * np.ones((4, 4), dtype=np.int)
+            # tem = index * np.ones((4, 5), dtype=np.int)
+            tem = np.zeros((4, 5))
+            tem[:, 0] = -1
             final_intersection_arr = np.concatenate((final_intersection_arr, tem), 0)
             continue
         final_intersection_arr = np.concatenate((final_intersection_arr, RI_Item.RI_intersection), 0)
@@ -549,7 +596,7 @@ def Parse_Model(RI, Point_Cluster):
             RI_Item.Generate_copywrite()
     # print(final_intersection_arr[4:, :])
 
-    return final_intersection_arr[4:, :].reshape(46, 4, 4)
+    return final_intersection_arr[4:, :].reshape(46, 4, 5)
 
 
 def Read_Road_Intersection(path_RI):
@@ -570,15 +617,20 @@ def Read_Road_Intersection(path_RI):
     return list_RI, intersec_arr
 
 
+
 '''
 #############################################################################################################
 ###########################################========--可视化--========################################
 #############################################################################################################
 输入：规则矩阵
 输出：路口图片
+完成者：陶诗语、罗佩弦
 
 输入：路口图片
 输出：界面AI
+完成者：邹玮杰
+
+
 '''
 
 import turtle as t
@@ -586,8 +638,8 @@ import numpy as np
 from PIL import Image
 
 
-# input:数组，4行5列，每行依次对应右、上、左、下方向，任意一行的每列依次为(0/1)：道路是否存在/角度，
-# 是否调头，是否左转，是否直行，是否右转
+# input:数组，4行5列，每行依次对应右、上、左、下方向，任意一行的每列依次为(0/1)：
+# 道路是否存在/角度，是否调头，是否左转，是否直行，是否右转
 
 def DrawRoadSection(Dataarray, outdir, name):
     width = 300
@@ -904,3 +956,248 @@ def draw_on_map(df, sav_path):
     World_map.save(sav_path)
     # display(World_map)
     return World_map
+
+
+'''
+#############################################################################################################
+###########################################========--可视化2--========################################
+#############################################################################################################
+输入：规则矩阵
+输出：路口规则矢量
+
+完成者：陈德跃
+'''
+from math import cos,sin,pi
+
+# 绕指定点旋转的旋转函数
+def RotatePoint(corerate_point, point, angle):
+    angle = -angle / 180 * pi
+    # print(angle)
+    r_matrix = np.asarray([[cos(angle), -sin(angle)],
+                           [sin(angle), cos(angle)]])
+    corerate_point = np.asarray(corerate_point)
+    point = np.asarray(point)
+
+    new_point = np.dot(r_matrix, (point - corerate_point)) + corerate_point
+    return new_point
+    # print(new_point)
+
+# corerate_point = [0,0]
+# point = [0,-10]
+# angle = 90
+# newpoint = RotatePoint(corerate_point,point,angle)
+# print(newpoint)
+# exit()
+
+def RotatePointList(corerate_point, pointlist, angle):
+    newlist = []
+    for point in pointlist:
+        newlist.append(RotatePoint(corerate_point, point, angle))
+    return np.asarray(newlist)
+
+
+def DrawPoint_Direct(Seat, rule):
+    Direct = rule[0]
+    if Direct == -1:
+        return None
+
+    Direct_number = rule[1:].sum()
+    New_Seat = []
+    unit = np.asarray([0.00119714, 0.00097229]) / 25
+
+    startpoint = Seat - np.asarray([0, unit[1]]) * 8 - np.asarray([unit[0], 0]) * Direct_number + np.asarray(
+        [unit[0], 0]) / 2
+    for i in range(Direct_number):
+        New_Seat.append(startpoint + np.asarray([unit[0], 0]) * i * 2)
+
+    LineList = []
+    seat = 0
+    '''左转 右转 直行 掉头'''
+    if rule[1]:
+        Position = New_Seat[seat]
+
+        # 直线
+        point1 = Position + np.asarray([unit[0], 0]) * 4 / 5
+        point2 = Position
+        point3 = Position - np.asarray([unit[0], 0]) * 4 / 5
+
+        # 折角
+        point4 = Position - np.asarray([unit[0], 0]) * 4 / 5 + np.asarray([unit[0], unit[1]]) / 5
+        point5 = Position - np.asarray([unit[0], 0]) * 4 / 5 + np.asarray([unit[0], -unit[1]]) / 5
+
+        line1 = np.asarray([point1, point2, point3])
+        line3 = np.asarray([point4, point3, point5])
+
+        line1 = RotatePointList(Seat, line1, Direct)
+        line3 = RotatePointList(Seat, line3, Direct)
+
+        LineList.append(line1)
+        LineList.append(line3)
+        # plt.plot(line1[:,0],line1[:,1])
+        # plt.plot(line3[:, 0], line3[:, 1])
+        # plt.show()
+        # exit()
+        seat += 1
+
+    if rule[2]:
+        Position = New_Seat[seat]
+
+        # 直线
+        point1 = Position + np.asarray([unit[0], 0]) * 4 / 5
+        point2 = Position
+        point3 = Position - np.asarray([unit[0], 0]) * 4 / 5
+
+        # 折角
+        point4 = Position + np.asarray([unit[0], 0]) * 4 / 5 - np.asarray([unit[0], unit[1]]) / 5
+        point5 = Position + np.asarray([unit[0], 0]) * 4 / 5 - np.asarray([unit[0], -unit[1]]) / 5
+
+        line1 = np.asarray([point1, point2, point3])
+        line3 = np.asarray([point4, point1, point5])
+
+        line1 = RotatePointList(Seat, line1, Direct)
+        line3 = RotatePointList(Seat, line3, Direct)
+
+        LineList.append(line1)
+        LineList.append(line3)
+        # plt.plot(line1[:,0],line1[:,1])
+        # plt.plot(line3[:, 0], line3[:, 1])
+        # plt.show()
+        # exit()
+        seat += 1
+
+    if rule[3]:
+        Position = New_Seat[seat]
+
+        # 直线
+        point1 = Position + np.asarray([0, unit[1]]) * 4 / 5
+        point2 = Position
+        point3 = Position - np.asarray([0, unit[1]]) * 4 / 5
+
+        # 折角
+        point4 = Position + np.asarray([0, unit[1]]) * 4 / 5 - np.asarray([unit[0], unit[1]]) / 5
+        point5 = Position + np.asarray([0, unit[1]]) * 4 / 5 - np.asarray([-unit[0], unit[1]]) / 5
+
+        line1 = np.asarray([point1, point2, point3])
+        line3 = np.asarray([point4, point1, point5])
+
+        line1 = RotatePointList(Seat, line1, Direct)
+        line3 = RotatePointList(Seat, line3, Direct)
+
+        LineList.append(line1)
+        LineList.append(line3)
+
+        seat += 1
+
+    if rule[4]:
+        Position = New_Seat[seat]
+
+        # 直线
+        point1 = Position + np.asarray([unit[0], 0]) * 4 / 5 - np.asarray([0, unit[1]]) * 4 / 5
+        point2 = Position + np.asarray([unit[0], 0]) * 4 / 5
+        point3 = Position + np.asarray([unit[0], 0]) * 4 / 5 + np.asarray([0, unit[1]]) * 4 / 5
+
+        point4 = Position + np.asarray([0, unit[1]]) * 4 / 5
+        point5 = Position - np.asarray([unit[0], 0]) * 4 / 5 + np.asarray([0, unit[1]]) * 4 / 5
+        point6 = Position - np.asarray([unit[0], 0]) * 4 / 5
+
+        point7 = Position - np.asarray([unit[0], 0]) * 4 / 5 - np.asarray([0, unit[1]]) * 4 / 5
+
+        # 折角
+        point8 = point7 + np.asarray([unit[0], unit[1]]) / 5
+        point9 = point7 + np.asarray([-unit[0], unit[1]]) / 5
+
+        line1 = np.asarray([point1, point2, point3, point4, point5, point6, point7])
+        line3 = np.asarray([point8, point7, point9])
+
+        line1 = RotatePointList(Seat, line1, Direct)
+        line3 = RotatePointList(Seat, line3, Direct)
+
+        LineList.append(line1)
+        LineList.append(line3)
+        # plt.plot(line1[:,0],line1[:,1])
+        # plt.plot(line3[:, 0], line3[:, 1])
+        # plt.show()
+        # exit()
+        seat += 1
+
+    yard = ogr.Geometry(ogr.wkbMultiLineString)
+    for line in LineList:
+        ring = ogr.Geometry(ogr.wkbLinearRing)  # 构建几何类型:线
+        for point in line:
+            ring.AddPoint(point[0], point[1])  # 添加点01
+
+        yard.AddGeometry(ring)
+    yard.CloseRings()
+
+    return yard
+
+
+def DrawRoadSection(inshp_road, Bigrule, outshp):
+    in_ds = ogr.Open(inshp_road, False)  # False - read only, True - read/write
+    in_layer = in_ds.GetLayer(0)
+
+    in_spatialref = in_layer.GetSpatialRef()
+
+    pointlist = []
+    feature = in_layer.GetNextFeature()
+    while feature is not None:
+        geom = feature.GetGeometryRef()
+        lon = geom.GetPoints()[0][0]
+        lat = geom.GetPoints()[0][1]
+        pointlist.append([lon, lat])
+
+        feature = in_layer.GetNextFeature()
+
+    in_ds.Destroy()
+
+    if len(pointlist) != Bigrule.shape[0]:
+        print('规则数组和路口要素长度不同,规则数组：{},路口要素：{}'.format(Bigrule.shape[0], len(pointlist)))
+        exit()
+
+    '''---------------------------== 接下来创建路口图像 ==------------------------------------'''
+    driver = ogr.GetDriverByName("ESRI Shapefile")
+    if os.access(outshp, os.F_OK):
+        driver.DeleteDataSource(outshp)
+
+    ds = driver.CreateDataSource(outshp)
+
+    in_geomtype = ogr.wkbMultiLineString
+    layer = ds.CreateLayer(outshp[:-4], srs=in_spatialref, geom_type=in_geomtype)
+    # fields
+    fieldlist = []
+    fddict = {'name': 'label', 'type': ogr.OFTInteger,
+              'width': 13, 'decimal': 11}
+    fieldlist += [fddict]
+
+    for fd in fieldlist:
+        field = ogr.FieldDefn(fd['name'], fd['type'])
+        if 'width' in fd:
+            field.SetWidth(fd['width'])
+        if 'decimal' in fd:
+            field.SetPrecision(fd['decimal'])
+
+        # print(fd['name'],fd['width'],fd['decimal'])
+        layer.CreateField(field)
+
+    print(time.time() - time_start)
+
+    # pp = np.asarray(pointlist)
+    # a = (pp.max(axis=0)-pp.min(axis=0))/10
+    # print(a)
+    # exit()
+
+    for i, point in enumerate(pointlist):
+        four_rule = Bigrule[i]
+
+        for rule in four_rule:
+            # print(rule)
+            # exit()
+            outFeature = ogr.Feature(layer.GetLayerDefn())
+            yard = DrawPoint_Direct(point, rule)
+            if yard is None:
+                continue
+            outFeature.SetGeometry(yard)
+            layer.CreateFeature(outFeature)
+
+    ds.Destroy()
+

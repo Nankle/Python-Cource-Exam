@@ -58,6 +58,9 @@ def CreatSential(shp):
                 templist = []
             else:
                 templist = []
+    plt.imshow(Data.reshape(70,80))
+    plt.show()
+    exit()
 
     for i,it in enumerate(DataSet):
         DataSet[i] = it + oringin
@@ -277,14 +280,14 @@ def CreatRect(inshp,outshp):
 if __name__ == '__main__':
 
 
-    inshp = 'Data/20201006_carvideo_orig.shp'
+    inshp = '../data/20201006_carvideo_orig.shp'
     Dataset,simple = CreatSential(inshp)
 
     # for item in Dataset:
     #     #     print(item)
     #     # exit()
 
-    if not os.path.exists('Output/'): os.makedirs('Output/')
+    if not os.path.exists('../Output/'): os.makedirs('../Output/')
 
     outshp1 = 'Output/ClusterPoint.shp'
     outshp2 = 'Output/SimplePoint.shp'

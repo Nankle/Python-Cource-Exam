@@ -61,7 +61,7 @@ OutPut: 中间与最终结果保存<br>
 | :----:           |    :----:       |
 |Visual1.shp       | 生成的行驶规则矢量方向图 |
 |RoadInsection.txt |  路口行驶规则      |
-|ClusterPoint      | 聚类点簇          ｜
+|ClusterPoint      | 聚类点簇          |
 
 OutPhoto：网络地图可视化源文件<br>
 
@@ -191,13 +191,12 @@ out.save(JpgPic2, "PNG", quality=100)
 
 
 2. 网络地图可视化<br>
-![整体示意图](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC.png)
-![路口规则示意图合集](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC1.png)<br>
+![整体示意图](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC.png)![路口规则示意图合集](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC1.png)<br>
 
 
 3. 矢量输出结果展示<br>
-|![1](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/1.png) | ![2](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/2.jpg)| ![3](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/3.jpg) |
-|![4](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/4.jpg) | ![5](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/5.jpg)| ![6](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/planB/6.jpg) |
+[矢量输出结果展示，在Arcgis中打开即可]()
+@https://github.com/Chendeyue<br>
 
  
 ## 5 Reference

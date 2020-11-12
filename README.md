@@ -173,6 +173,7 @@ out.save(JpgPic2, "PNG", quality=100)
 **数据结果可视化**<br>
 罗佩弦: 路口绘制、画箭头函数的调用、图片保存、格式转换<br>
 陶诗语: `utils/createpicturenew.py`<br>
+[可视化报告](https://github.com/Nankle/Python-Cource-Exam/blob/main/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%8A%A5%E5%91%8A-%E9%99%B6%E8%AF%97%E8%AF%AD%E3%80%81%E7%BD%97%E4%BD%A9%E5%BC%A6.pdf)
 
 
 ## 4 Results
@@ -194,7 +195,7 @@ out.save(JpgPic2, "PNG", quality=100)
 
 3. 矢量输出结果展示<br>
 [矢量输出结果展示，可在Arcgis中打开](https://github.com/Nankle/Python-Cource-Exam/blob/main/visual.md)<br>
-@https://github.com/Chendeyue<br>
+@[CDY](https://github.com/Chendeyue)<br>
 
  
 ## 5 Reference

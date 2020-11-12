@@ -191,7 +191,7 @@ out.save(JpgPic2, "PNG", quality=100)
 
 2. 网络地图可视化<br>
 ![整体示意图](https://github.com/Nankle/Python-Cource-Exam/blob/main/source/1_%E5%89%AF%E6%9C%AC.png)<br>
-[🔗链接](file:///Users/jamesnankle/Documents/GitHub/Python-Cource-Exam/OutPhoto/index.html)
+[链接](file:///Users/jamesnankle/Documents/GitHub/Python-Cource-Exam/OutPhoto/index.html)
 
 
 3. 矢量输出结果展示<br>
